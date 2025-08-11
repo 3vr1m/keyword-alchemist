@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Upload, Sparkles, FileText, DollarSign, Moon, Sun, Copy, CheckCircle } from 'lucide-react';
+import { Upload, Sparkles, FileText, DollarSign, Moon, Sun, Copy, CheckCircle, Menu, X } from 'lucide-react';
 import './App.css';
 import { Keyword, Article, Theme, CurrentView } from './types';
 import { parseKeywordsFromFile, generateUniqueId, copyToClipboard, formatWordPressContent, readFileAsText, validateFileType } from './utils/fileUtils';
@@ -16,6 +16,7 @@ function App() {
   const [showApiKeyInput, setShowApiKeyInput] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [copiedArticleId, setCopiedArticleId] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -233,15 +234,62 @@ function App() {
 
   return (
     <div className="app">
+      <button className="mobile-menu-toggle" onClick={() => setIsMobileMenuOpen(true)}>
+        <Menu size={20} />
+      </button>
+      
       <button className="theme-toggle" onClick={toggleTheme}>
         {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
       </button>
       
+      {/* Mobile Overlay */}
+      <div className={`mobile-overlay ${isMobileMenuOpen ? 'open' : ''}`} onClick={() => setIsMobileMenuOpen(false)} />
+      
       {/* Sidebar */}
-      <div className="sidebar">
+      <div className={`sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <h1 className="app-title">Keyword Alchemist</h1>
           <p className="app-subtitle">Transform keywords into blog posts</p>
+          <button 
+            style={{
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-primary)',
+              cursor: 'pointer',
+              display: 'none'
+            }}
+            className="mobile-close"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <X size={20} />
+          </button>
+        </div>
+        
+        {/* Mobile Navigation */}
+        <div className="sidebar-nav">
+          <div 
+            className={`sidebar-nav-item ${currentView === 'articles' ? 'active' : ''}`}
+            onClick={() => {
+              setCurrentView('articles');
+              setIsMobileMenuOpen(false);
+            }}
+          >
+            <FileText size={18} />
+            Articles
+          </div>
+          <div 
+            className={`sidebar-nav-item ${currentView === 'pricing' ? 'active' : ''}`}
+            onClick={() => {
+              setCurrentView('pricing');
+              setIsMobileMenuOpen(false);
+            }}
+          >
+            <DollarSign size={18} />
+            Pricing
+          </div>
         </div>
         
         <div className="upload-section">
@@ -252,9 +300,9 @@ function App() {
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            <Upload className="upload-icon" size={32} />
+            <Upload className="upload-icon" size={28} />
             <div className="upload-text">Upload Keywords</div>
-            <div className="upload-subtext">Drag & drop or click to select .csv/.txt file</div>
+            <div className="upload-subtext">Drag & drop .csv/.txt file</div>
           </div>
           <input
             ref={fileInputRef}
@@ -264,6 +312,24 @@ function App() {
             className="file-input"
           />
         </div>
+        
+        <button 
+          className="generate-button"
+          onClick={generateBlogPosts}
+          disabled={isGenerating || keywords.filter(k => k.status === 'pending').length === 0}
+        >
+          {isGenerating ? (
+            <>
+              <div className="loading-spinner" />
+              Generating...
+            </>
+          ) : (
+            <>
+              <Sparkles size={18} />
+              Generate Posts
+            </>
+          )}
+        </button>
         
         <div className="keywords-section">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
@@ -297,24 +363,6 @@ function App() {
             ))}
           </div>
         </div>
-        
-        <button 
-          className="generate-button"
-          onClick={generateBlogPosts}
-          disabled={isGenerating || keywords.filter(k => k.status === 'pending').length === 0}
-        >
-          {isGenerating ? (
-            <>
-              <div className="loading-spinner" />
-              Generating...
-            </>
-          ) : (
-            <>
-              <Sparkles size={20} />
-              Generate Posts
-            </>
-          )}
-        </button>
       </div>
       
       {/* Main Content */}
