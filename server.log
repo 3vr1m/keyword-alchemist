@@ -147,3 +147,250 @@ Compiling...
 Compiled successfully!
 webpack compiled successfully
 No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/App.tsx:298:7
+TS2552: Cannot find name 'setApiKey'. Did you mean 'apiKey'?
+    296 |     
+    297 |     if (envApiKey) {
+  > 298 |       setApiKey(envApiKey);
+        |       ^^^^^^^^^
+    299 |       geminiService.setApiKey(envApiKey);
+    300 |     } else if (savedApiKey) {
+    301 |       setApiKey(savedApiKey);
+
+ERROR in src/App.tsx:301:7
+TS2552: Cannot find name 'setApiKey'. Did you mean 'apiKey'?
+    299 |       geminiService.setApiKey(envApiKey);
+    300 |     } else if (savedApiKey) {
+  > 301 |       setApiKey(savedApiKey);
+        |       ^^^^^^^^^
+    302 |       geminiService.setApiKey(savedApiKey);
+    303 |     } else {
+    304 |       setShowApiKeyInput(true);
+
+ERROR in src/App.tsx:304:7
+TS2304: Cannot find name 'setShowApiKeyInput'.
+    302 |       geminiService.setApiKey(savedApiKey);
+    303 |     } else {
+  > 304 |       setShowApiKeyInput(true);
+        |       ^^^^^^^^^^^^^^^^^^
+    305 |     }
+    306 |   }, []);
+    307 |
+
+ERROR in src/App.tsx:323:7
+TS2304: Cannot find name 'setShowApiKeyInput'.
+    321 |       localStorage.setItem('geminiApiKey', apiKey.trim());
+    322 |       geminiService.setApiKey(apiKey.trim());
+  > 323 |       setShowApiKeyInput(false);
+        |       ^^^^^^^^^^^^^^^^^^
+    324 |     }
+    325 |   };
+    326 |
+
+ERROR in src/App.tsx:383:7
+TS2304: Cannot find name 'setShowApiKeyInput'.
+    381 |   const generateBlogPosts = async () => {
+    382 |     if (!geminiService.isConfigured()) {
+  > 383 |       setShowApiKeyInput(true);
+        |       ^^^^^^^^^^^^^^^^^^
+    384 |       return;
+    385 |     }
+    386 |
+
+ERROR in src/App.tsx:551:7
+TS2304: Cannot find name 'showApiKeyInput'.
+    549 |   };
+    550 |
+  > 551 |   if (showApiKeyInput) {
+        |       ^^^^^^^^^^^^^^^
+    552 |     return (
+    553 |       <div className="app">
+    554 |         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', padding: '20px' }}>
+
+ERROR in src/App.tsx:562:34
+TS2552: Cannot find name 'setApiKey'. Did you mean 'apiKey'?
+    560 |                 type="password"
+    561 |                 value={apiKey}
+  > 562 |                 onChange={(e) => setApiKey(e.target.value)}
+        |                                  ^^^^^^^^^
+    563 |                 placeholder="Enter your Gemini API key..."
+    564 |                 style={{
+    565 |                   width: '100%',
+
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/App.tsx
+Syntax error: Identifier expected (556:30)
+ERROR in ./src/App.tsx
+Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: /Users/eriskin/keyword-alchemist/src/App.tsx: Unexpected token (556:32)
+
+  554 |                 type="password"
+  555 |                 value={apiKey}
+> 556 |                   borderRadius: '8px',
+      |                                 ^
+  557 |                   background: 'var(--bg-primary)',
+  558 |                   color: 'var(--text-primary)',
+  559 |                   fontSize: '16px'
+    at constructor (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:367:19)
+    at TypeScriptParserMixin.raise (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6627:19)
+    at TypeScriptParserMixin.unexpected (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6647:16)
+    at TypeScriptParserMixin.jsxParseIdentifier (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4599:12)
+    at TypeScriptParserMixin.jsxParseNamespacedName (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4610:22)
+    at TypeScriptParserMixin.jsxParseAttribute (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4682:22)
+    at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4697:28)
+    at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10062:18)
+    at TypeScriptParserMixin.jsxParseOpeningElementAt (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4692:17)
+    at TypeScriptParserMixin.jsxParseElementAt (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4716:33)
+    at TypeScriptParserMixin.jsxParseElementAt (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4728:32)
+    at TypeScriptParserMixin.jsxParseElementAt (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4728:32)
+    at TypeScriptParserMixin.jsxParseElementAt (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4728:32)
+    at TypeScriptParserMixin.jsxParseElementAt (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4728:32)
+    at TypeScriptParserMixin.jsxParseElement (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4779:17)
+    at TypeScriptParserMixin.parseExprAtom (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4789:19)
+    at TypeScriptParserMixin.parseExprSubscripts (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11076:23)
+    at TypeScriptParserMixin.parseUpdate (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11061:21)
+    at TypeScriptParserMixin.parseMaybeUnary (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11041:23)
+    at TypeScriptParserMixin.parseMaybeUnary (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9852:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10894:61)
+    at TypeScriptParserMixin.parseExprOps (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10899:23)
+    at TypeScriptParserMixin.parseMaybeConditional (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10876:23)
+    at TypeScriptParserMixin.parseMaybeAssign (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10826:21)
+    at /Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9790:39
+    at TypeScriptParserMixin.tryParse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6935:20)
+    at TypeScriptParserMixin.parseMaybeAssign (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9790:18)
+    at /Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10795:39
+    at TypeScriptParserMixin.allowInAnd (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12427:12)
+    at TypeScriptParserMixin.parseMaybeAssignAllowIn (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10795:17)
+    at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12494:17)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11674:28)
+    at TypeScriptParserMixin.parseExprAtom (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11326:23)
+    at TypeScriptParserMixin.parseExprAtom (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4794:20)
+    at TypeScriptParserMixin.parseExprSubscripts (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11076:23)
+    at TypeScriptParserMixin.parseUpdate (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11061:21)
+    at TypeScriptParserMixin.parseMaybeUnary (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11041:23)
+    at TypeScriptParserMixin.parseMaybeUnary (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9852:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10894:61)
+    at TypeScriptParserMixin.parseExprOps (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10899:23)
+    at TypeScriptParserMixin.parseMaybeConditional (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10876:23)
+    at TypeScriptParserMixin.parseMaybeAssign (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10826:21)
+    at TypeScriptParserMixin.parseMaybeAssign (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9801:20)
+    at TypeScriptParserMixin.parseExpressionBase (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10779:23)
+    at /Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10775:39
+    at TypeScriptParserMixin.allowInAnd (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12422:16)
+    at TypeScriptParserMixin.parseExpression (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10775:17)
+    at TypeScriptParserMixin.parseReturnStatement (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13142:28)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12798:21)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9527:18)
+
+ERROR in [eslint] 
+src/App.tsx
+  Line 556:30:  Parsing error: Identifier expected
+
+webpack compiled with 2 errors
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/App.tsx:300:7
+TS2304: Cannot find name 'setShowApiKeyInput'.
+    298 |     } else if (savedApiKey) {
+    299 |     } else {
+  > 300 |       setShowApiKeyInput(true);
+        |       ^^^^^^^^^^^^^^^^^^
+    301 |     }
+    302 |   }, []);
+    303 |
+
+ERROR in src/App.tsx:318:7
+TS2304: Cannot find name 'setShowApiKeyInput'.
+    316 |     if (apiKey.trim()) {
+    317 |       localStorage.setItem('geminiApiKey', apiKey.trim());
+  > 318 |       setShowApiKeyInput(false);
+        |       ^^^^^^^^^^^^^^^^^^
+    319 |     }
+    320 |   };
+    321 |
+
+ERROR in src/App.tsx:378:7
+TS2304: Cannot find name 'setShowApiKeyInput'.
+    376 |   const generateBlogPosts = async () => {
+    377 |     if (!geminiService.isConfigured()) {
+  > 378 |       setShowApiKeyInput(true);
+        |       ^^^^^^^^^^^^^^^^^^
+    379 |       return;
+    380 |     }
+    381 |
+
+ERROR in src/App.tsx:556:19
+TS2322: Type '{ type: "password"; value: string; borderRadius: true; }' is not assignable to type 'DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>'.
+  Property 'borderRadius' does not exist on type 'DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>'.
+    554 |                 type="password"
+    555 |                 value={apiKey}
+  > 556 |                   borderRadius: '8px',
+        |                   ^^^^^^^^^^^^
+    557 |                   background: 'var(--bg-primary)',
+    558 |                   color: 'var(--text-primary)',
+    559 |                   fontSize: '16px'
+
+ERROR in src/App.tsx:556:31
+TS1003: Identifier expected.
+    554 |                 type="password"
+    555 |                 value={apiKey}
+  > 556 |                   borderRadius: '8px',
+        |                               ^
+    557 |                   background: 'var(--bg-primary)',
+    558 |                   color: 'var(--text-primary)',
+    559 |                   fontSize: '16px'
+
+ERROR in src/App.tsx:560:17
+TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    558 |                   color: 'var(--text-primary)',
+    559 |                   fontSize: '16px'
+  > 560 |                 }}
+        |                 ^
+    561 |                 required
+    562 |               />
+    563 |               <button
+
+ERROR in src/App.tsx:560:18
+TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    558 |                   color: 'var(--text-primary)',
+    559 |                   fontSize: '16px'
+  > 560 |                 }}
+        |                  ^
+    561 |                 required
+    562 |               />
+    563 |               <button
+
+ERROR in src/App.tsx:562:16
+TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+    560 |                 }}
+    561 |                 required
+  > 562 |               />
+        |                ^
+    563 |               <button
+    564 |                 type="submit"
+    565 |                 style={{
+
+ERROR in src/App.tsx:910:1
+TS1128: Declaration or statement expected.
+    908 |     </div>
+    909 |   );
+  > 910 | }
+        | ^
+    911 |
+    912 | export default App;
+    913 |  
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
