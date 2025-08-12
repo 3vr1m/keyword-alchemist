@@ -37,19 +37,14 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           # Navigate to project directory
-          cd /opt/keyword-alchemist || mkdir -p /opt/keyword-alchemist && cd /opt/keyword-alchemist
+          cd /opt/keyword-alchemist
           
           # Pull latest code
-          if [ -d ".git" ]; then
-            git fetch origin
-            git reset --hard origin/main
-          else
-            git clone https://github.com/${{ github.repository }} .
-          fi
+          git pull origin main
           
           # Build and deploy with Docker
-          docker-compose down || true
-          docker-compose up -d --build
+          docker compose down
+          docker compose up -d --build
           
           # Clean up old images
           docker image prune -f
