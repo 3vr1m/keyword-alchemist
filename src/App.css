@@ -65,6 +65,7 @@ body {
 .sidebar-header {
   padding: 20px;
   border-bottom: 1px solid var(--border-color);
+  position: relative;
 }
 
 .app-title {
@@ -80,22 +81,30 @@ body {
 }
 
 .theme-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+  position: fixed;
+  top: 30px;
+  right: 30px;
   background: var(--bg-tertiary);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 8px;
+  border-radius: 50%;
+  padding: 12px;
   cursor: pointer;
   color: var(--text-primary);
   transition: all 0.2s ease;
-  z-index: 1000;
+  z-index: 1001;
+  box-shadow: var(--shadow-medium);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .theme-toggle:hover {
   background: var(--accent-primary);
   color: white;
+  transform: scale(1.1);
+  box-shadow: var(--shadow-dark);
 }
 
 /* Mobile Menu */
@@ -136,10 +145,47 @@ body {
   border-bottom: 1px solid var(--border-color);
 }
 
+/* Format Selection */
+.format-section {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.format-select {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 12px;
+}
+
+.format-select:hover {
+  border-color: var(--accent-primary);
+}
+
+.format-select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(199, 116, 71, 0.1);
+}
+
+.format-description {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
 .upload-area {
   border: 2px dashed var(--border-color);
   border-radius: 8px;
-  padding: 20px 16px;
+  padding: 16px 12px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -277,7 +323,6 @@ body {
 
 .generate-button:hover:not(:disabled) {
   background: var(--accent-hover);
-  transform: translateY(-1px);
   box-shadow: var(--shadow-medium);
 }
 
@@ -295,58 +340,62 @@ body {
 }
 
 .main-header {
-  padding: 20px 30px;
-  background: var(--bg-secondary);
+  padding: 30px 30px 20px 30px;
+  background: var(--bg-primary);
   border-bottom: 1px solid var(--border-color);
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .main-title {
   font-size: 28px;
   font-weight: 700;
   color: var(--text-primary);
+  text-align: center;
 }
 
 .main-subtitle {
-  font-size: 16px;
-  color: var(--text-secondary);
-  margin-top: 4px;
+  display: none;
 }
 
 /* Navigation */
 .nav-buttons {
   display: flex;
-  gap: 0;
-  background: var(--bg-tertiary);
-  border-radius: 8px;
-  padding: 4px;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-button {
   background: transparent;
   border: none;
-  border-radius: 6px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 500;
+  border-bottom: 3px solid transparent;
+  padding: 18px 12px;
+  font-size: 18px;
+  font-weight: 700;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  min-width: 120px;
+  justify-content: center;
 }
 
 .nav-button.active {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  box-shadow: var(--shadow-light);
+  color: var(--accent-primary);
+  border-bottom-color: var(--accent-primary);
 }
 
 .nav-button:hover:not(.active) {
   color: var(--text-primary);
+  border-bottom-color: var(--border-color);
 }
 
 /* Sidebar Navigation for Mobile */
@@ -386,15 +435,34 @@ body {
   flex: 1;
   overflow-y: auto;
   padding: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.articles-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.articles-title {
+  font-size: 56px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.articles-subtitle {
+  font-size: 20px;
+  color: var(--text-secondary);
+  max-width: 800px;
+  margin: 0 auto 30px auto;
+  line-height: 1.6;
 }
 
 .empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
   text-align: center;
+  margin-bottom: 60px;
 }
 
 .empty-state-icon {
@@ -403,16 +471,17 @@ body {
 }
 
 .empty-state-title {
-  font-size: 32px;
+  font-size: 56px;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .empty-state-text {
-  font-size: 18px;
+  font-size: 20px;
   color: var(--text-secondary);
-  max-width: 600px;
+  max-width: 800px;
+  margin: 0 auto 30px auto;
   line-height: 1.6;
 }
 
@@ -428,8 +497,8 @@ body {
 }
 
 .article-card:hover {
-  box-shadow: var(--shadow-medium);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-dark);
+  border-color: var(--accent-primary);
 }
 
 .article-header {
@@ -461,8 +530,8 @@ body {
 .article-tldr {
   background: var(--bg-tertiary);
   border-left: 4px solid var(--accent-primary);
-  padding: 16px 20px;
-  margin-bottom: 20px;
+  padding: 18px 22px;
+  margin-bottom: 24px;
   border-radius: 0 8px 8px 0;
 }
 
@@ -470,28 +539,43 @@ body {
   font-size: 14px;
   font-weight: 600;
   color: var(--accent-primary);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .article-tldr p {
-  font-size: 16px;
+  font-size: 17px;
   color: var(--text-primary);
-  line-height: 1.5;
+  line-height: 1.6;
+  margin: 0;
 }
 
 .article-body {
   font-size: 16px;
   line-height: 1.7;
   color: var(--text-primary);
+  /* Ensure minimum font sizes for better accessibility */
+}
+
+.article-body p {
+  font-size: 16px;
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+
+.article-body li {
+  font-size: 16px;
+  margin-bottom: 8px;
+  line-height: 1.6;
 }
 
 .article-body h2 {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 600;
   margin: 32px 0 16px 0;
   color: var(--text-primary);
+  line-height: 1.4;
 }
 
 .article-body h3 {
@@ -499,19 +583,20 @@ body {
   font-weight: 600;
   margin: 28px 0 14px 0;
   color: var(--text-primary);
+  line-height: 1.4;
 }
 
-.article-body p {
-  margin-bottom: 16px;
+.article-body h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 24px 0 12px 0;
+  color: var(--text-primary);
+  line-height: 1.4;
 }
 
 .article-body ul,
 .article-body ol {
   margin: 16px 0 16px 24px;
-}
-
-.article-body li {
-  margin-bottom: 8px;
 }
 
 .article-body strong {
@@ -543,18 +628,18 @@ body {
 
 /* Pricing Page Styles */
 .pricing-container {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 40px 30px;
 }
 
 .pricing-header {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 60px;
 }
 
 .pricing-title {
-  font-size: 48px;
+  font-size: 56px;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 16px;
@@ -563,8 +648,8 @@ body {
 .pricing-subtitle {
   font-size: 20px;
   color: var(--text-secondary);
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 800px;
+  margin: 0 auto 30px auto;
   line-height: 1.6;
 }
 
@@ -606,11 +691,12 @@ body {
 
 .pricing-card:hover {
   box-shadow: var(--shadow-dark);
-  transform: translateY(-4px);
+  border-color: var(--accent-primary);
 }
 
 .pricing-card.popular:hover {
-  transform: scale(1.05) translateY(-4px);
+  box-shadow: var(--shadow-dark);
+  border-color: var(--accent-hover);
 }
 
 .plan-name {
@@ -669,7 +755,7 @@ body {
 
 .plan-button:hover {
   background: var(--accent-hover);
-  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
 }
 
 .plan-note {
@@ -703,7 +789,7 @@ body {
     position: fixed;
     top: 0;
     left: -100%;
-    width: 280px;
+    width: 320px;
     height: 100vh;
     z-index: 1000;
     transition: left 0.3s ease;
@@ -729,8 +815,13 @@ body {
   
   .main-header {
     padding: 20px;
-    padding-left: 60px;
-    padding-right: 100px;
+    padding-left: 20px;
+    padding-right: 70px;
+  }
+  
+  /* Adjust main header when mobile menu is open */
+  .sidebar.open ~ .main-content .main-header {
+    padding-left: 20px;
   }
   
   .main-title {
@@ -785,7 +876,8 @@ body {
   }
   
   .pricing-card.popular:hover {
-    transform: translateY(-4px);
+    box-shadow: var(--shadow-dark);
+    border-color: var(--accent-hover);
   }
   
   .pricing-title {
@@ -823,6 +915,12 @@ body {
   width: 16px;
   height: 16px;
   animation: spin 1s linear infinite;
+}
+
+/* Loading spinner for copy button (white on colored background) */
+.copy-button .loading-spinner {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
 }
 
 @keyframes spin {

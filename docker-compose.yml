@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  keyword-alchemist:
+    build: .
+    container_name: keyword-alchemist
+    restart: unless-stopped
+    ports:
+      - "3001:80"
+    networks:
+      - keyword-alchemist-network
+    environment:
+      - NODE_ENV=production
+
+networks:
+  keyword-alchemist-network:
+    driver: bridge

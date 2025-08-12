@@ -36,8 +36,59 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
   }
 };
 
+// Format-specific content formatters
 export const formatWordPressContent = (title: string, body: string): string => {
   return `${title}\n\n${body}`;
+};
+
+export const formatShopifyContent = (title: string, body: string): string => {
+  return `<h1>${title}</h1>\n\n${body}`;
+};
+
+export const formatGhostContent = (title: string, body: string): string => {
+  return `# ${title}\n\n${body}`;
+};
+
+export const formatMediumContent = (title: string, body: string): string => {
+  return `# ${title}\n\n${body}`;
+};
+
+export const formatHtmlContent = (title: string, body: string): string => {
+  return `<h1>${title}</h1>\n\n${body}`;
+};
+
+export const formatMarkdownContent = (title: string, body: string): string => {
+  return `# ${title}\n\n${body}`;
+};
+
+// Main formatter function that routes to appropriate formatter based on format
+export const formatContent = (title: string, body: string, format: string): string => {
+  switch (format) {
+    case 'wordpress':
+      return formatWordPressContent(title, body);
+    case 'shopify':
+      return formatShopifyContent(title, body);
+    case 'ghost':
+      return formatGhostContent(title, body);
+    case 'medium':
+      return formatMediumContent(title, body);
+    case 'html':
+      return formatHtmlContent(title, body);
+    case 'markdown':
+      return formatMarkdownContent(title, body);
+    default:
+      return formatWordPressContent(title, body);
+  }
+};
+
+// Format content for copying (excludes TL;DR section)
+export const formatContentForCopy = (title: string, body: string, format: string): string => {
+  // Remove the introductory paragraph that serves as TL;DR
+  // Look for the first heading (## or ###) and start content from there
+  const headingMatch = body.match(/(##[^\n]+[\s\S]*)/);  
+  const cleanBody = headingMatch ? headingMatch[1] : body;
+  
+  return formatContent(title, cleanBody, format);
 };
 
 export const readFileAsText = (file: File): Promise<string> => {

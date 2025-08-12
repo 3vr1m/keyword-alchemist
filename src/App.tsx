@@ -2,9 +2,271 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Upload, Sparkles, FileText, DollarSign, Moon, Sun, Copy, CheckCircle, Menu, X } from 'lucide-react';
 import './App.css';
 import { Keyword, Article, Theme, CurrentView } from './types';
-import { parseKeywordsFromFile, generateUniqueId, copyToClipboard, formatWordPressContent, readFileAsText, validateFileType } from './utils/fileUtils';
+import { parseKeywordsFromFile, generateUniqueId, copyToClipboard, formatContent, readFileAsText, validateFileType } from './utils/fileUtils';
 import { markdownToHtml, getWordCount } from './utils/markdownUtils';
 import geminiService from './services/geminiService';
+
+// ArticleTabView Component for displaying multiple approaches in tabs
+interface ArticleTabViewProps {
+  keyword: string;
+  articles: Article[];
+  outputFormat: string;
+  getFormatDisplayName: (format: string) => string;
+  handleCopyToClipboard: (article: Article) => void;
+  copiedArticleId: string | null;
+  convertingArticleId: string | null;
+  markdownToHtml: (markdown: string) => string;
+  getWordCount: (text: string) => number;
+}
+
+function ArticleTabView({
+  keyword,
+  articles,
+  outputFormat,
+  getFormatDisplayName,
+  handleCopyToClipboard,
+  copiedArticleId,
+  convertingArticleId,
+  markdownToHtml,
+  getWordCount
+}: ArticleTabViewProps) {
+  const [activeTab, setActiveTab] = useState(0);
+  
+  if (articles.length === 0) return null;
+  
+  const activeArticle = articles[activeTab] || articles[0];
+  
+  return (
+    <div className="article-card">
+      {/* Refined Tab Header */}
+      <div className="article-header" style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '16px', marginBottom: '20px' }}>
+        {/* Top row: Context + Copy button */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+          <div style={{ flex: 1, marginRight: '20px' }}>
+            <span style={{ fontSize: '15px', color: 'var(--text-secondary)', fontWeight: '400' }}>Article created based on:</span>
+            <div style={{ fontSize: '17px', fontWeight: '600', color: 'var(--text-primary)', marginTop: '4px', lineHeight: '1.3' }}>
+              "{keyword}"
+            </div>
+          </div>
+          
+          <button 
+            className="copy-button"
+            onClick={() => handleCopyToClipboard(activeArticle)}
+            style={{
+              padding: '12px 18px',
+              fontSize: '15px',
+              fontWeight: '600',
+              borderRadius: '8px',
+              border: 'none',
+              background: 'var(--accent-primary)',
+              color: 'white',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              minWidth: '140px',
+              justifyContent: 'center'
+            }}
+          >
+            {convertingArticleId === `${activeArticle.keyword}-${activeArticle.approach || 'default'}` ? (
+              <>
+                <div className="loading-spinner" style={{ width: '16px', height: '16px' }} />
+                Converting...
+              </>
+            ) : copiedArticleId === `${activeArticle.keyword}-${activeArticle.approach || 'default'}` ? (
+              <>
+                <CheckCircle size={16} />
+                Copied!
+              </>
+            ) : (
+              <>
+                <Copy size={16} />
+                Copy to {getFormatDisplayName(outputFormat)}
+                {activeArticle.originalFormat && activeArticle.originalFormat !== outputFormat && (
+                  <span style={{ fontSize: '11px', opacity: 0.8, marginLeft: '4px' }}>(converts)</span>
+                )}
+              </>
+            )}
+          </button>
+        </div>
+        
+        {/* Bottom row: Version selector */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ fontSize: '14px', color: 'var(--text-secondary)', fontWeight: '500', minWidth: 'fit-content' }}>Choose Version:</span>
+          <div className="article-tabs" style={{
+            display: 'flex',
+            gap: '3px',
+            background: 'var(--bg-secondary)',
+            padding: '3px',
+            borderRadius: '6px',
+            border: '1px solid var(--border-color)'
+          }}>
+            {articles.map((article, index) => (
+              <button
+                key={index}
+                className={`tab-button ${activeTab === index ? 'active' : ''}`}
+                onClick={() => setActiveTab(index)}
+                style={{
+                  padding: '6px 12px',
+                  border: 'none',
+                  borderRadius: '4px',
+                  background: activeTab === index ? 'var(--accent-primary)' : 'transparent',
+                  color: activeTab === index ? 'white' : 'var(--text-primary)',
+                  fontSize: '13px',
+                  fontWeight: activeTab === index ? '600' : '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                {article.approach || `Version ${index + 1}`}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+      
+      {/* Tab Content */}
+      <div className="tab-content">
+        <h2 className="article-title">{activeArticle.title}</h2>
+        
+        <div className="article-tldr">
+          <p>{activeArticle.tldr}</p>
+        </div>
+        
+        <div 
+          className="article-body"
+          dangerouslySetInnerHTML={{ __html: markdownToHtml(activeArticle.body) }}
+        />
+        
+        {/* SEO Linking Suggestions Section */}
+        {activeArticle.linkingSuggestions && (
+          <div style={{
+            marginTop: '32px',
+            padding: '20px',
+            background: 'var(--bg-tertiary)',
+            borderRadius: '12px',
+            border: '1px solid var(--border-color)',
+            borderLeft: '4px solid var(--accent-primary)'
+          }}>
+            <h3 style={{ 
+              fontSize: '18px', 
+              fontWeight: '600', 
+              color: 'var(--accent-primary)', 
+              marginBottom: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <span style={{ fontSize: '20px' }}>🔗</span>
+              SEO Linking Suggestions
+            </h3>
+            
+            <p style={{ 
+              fontSize: '15px', 
+              color: 'var(--text-secondary)', 
+              marginBottom: '16px',
+              lineHeight: '1.6'
+            }}>
+              {activeArticle.linkingSuggestions.context}
+            </p>
+            
+            {activeArticle.linkingSuggestions.keyTerms.length > 0 && (
+              <div style={{ marginBottom: '16px' }}>
+                <h4 style={{ 
+                  fontSize: '16px', 
+                  fontWeight: '600', 
+                  color: 'var(--text-primary)', 
+                  marginBottom: '8px' 
+                }}>
+                  🎯 Key Terms for Internal Linking:
+                </h4>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  {activeArticle.linkingSuggestions.keyTerms.map((term, index) => (
+                    <span 
+                      key={index}
+                      style={{
+                        background: 'var(--bg-primary)',
+                        border: '1px solid var(--border-color)',
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        fontSize: '14px',
+                        color: 'var(--text-primary)',
+                        fontWeight: '500'
+                      }}
+                    >
+                      "{term}"
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {activeArticle.linkingSuggestions.sections.length > 0 && (
+              <div>
+                <h4 style={{ 
+                  fontSize: '16px', 
+                  fontWeight: '600', 
+                  color: 'var(--text-primary)', 
+                  marginBottom: '8px' 
+                }}>
+                  🌐 Topics for External Linking:
+                </h4>
+                <ul style={{ 
+                  margin: '0', 
+                  paddingLeft: '18px',
+                  color: 'var(--text-primary)'
+                }}>
+                  {activeArticle.linkingSuggestions.sections.map((section, index) => (
+                    <li 
+                      key={index}
+                      style={{
+                        fontSize: '15px',
+                        marginBottom: '4px',
+                        lineHeight: '1.5'
+                      }}
+                    >
+                      {section}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            
+            <div style={{ 
+              marginTop: '12px', 
+              fontSize: '13px', 
+              color: 'var(--text-muted)', 
+              fontStyle: 'italic',
+              textAlign: 'center'
+            }}>
+              💡 These suggestions are AI-generated and specific to your article content
+            </div>
+          </div>
+        )}
+        
+        <div style={{ 
+          fontSize: '15px', 
+          color: 'var(--text-secondary)', 
+          marginTop: '20px', 
+          paddingTop: '20px', 
+          borderTop: '1px solid var(--border-color)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <span>
+            Word count: {getWordCount(activeArticle.body)} words • Generated: {activeArticle.createdAt.toLocaleDateString()}
+          </span>
+          <span style={{ fontSize: '12px', opacity: 0.7 }}>
+            Tab {activeTab + 1} of {articles.length}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function App() {
   const [theme, setTheme] = useState<Theme>('light');
@@ -17,6 +279,8 @@ function App() {
   const [dragOver, setDragOver] = useState(false);
   const [copiedArticleId, setCopiedArticleId] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [outputFormat, setOutputFormat] = useState<string>('wordpress');
+  const [convertingArticleId, setConvertingArticleId] = useState<string | null>(null);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -27,8 +291,14 @@ function App() {
       setTheme(savedTheme);
     }
     
+    // Check environment variable first, then localStorage
+    const envApiKey = process.env.REACT_APP_GEMINI_API_KEY;
     const savedApiKey = localStorage.getItem('geminiApiKey');
-    if (savedApiKey) {
+    
+    if (envApiKey) {
+      setApiKey(envApiKey);
+      geminiService.setApiKey(envApiKey);
+    } else if (savedApiKey) {
       setApiKey(savedApiKey);
       geminiService.setApiKey(savedApiKey);
     } else {
@@ -130,24 +400,60 @@ function App() {
       ));
 
       try {
-        const blogPost = await geminiService.generateBlogPost(keyword.text);
+        // Generate two different approaches for each keyword
+        const approaches = ['Option 1', 'Option 2'];
+        const generatedArticles: Article[] = [];
         
-        const article: Article = {
-          title: blogPost.title,
-          tldr: blogPost.tldr,
-          body: blogPost.body,
-          keyword: keyword.text,
-          createdAt: new Date()
-        };
+        for (let i = 0; i < approaches.length; i++) {
+          const approachPrompt = i === 0 
+            ? `Focus on practical, how-to content with step-by-step guidance.`
+            : `Focus on comprehensive analysis, trends, and expert insights.`;
+          
+          const blogPost = await geminiService.generateBlogPost(
+            keyword.text, 
+            outputFormat, 
+            approachPrompt
+          );
+          
+          const article: Article = {
+            title: blogPost.title,
+            tldr: blogPost.tldr,
+            body: blogPost.body,
+            keyword: keyword.text,
+            approach: approaches[i],
+            originalFormat: outputFormat,
+            createdAt: new Date()
+          };
+          
+          // Generate linking suggestions for this article
+          try {
+            const linkingSuggestions = await geminiService.generateLinkingSuggestions(
+              blogPost.title,
+              blogPost.body,
+              keyword.text
+            );
+            article.linkingSuggestions = linkingSuggestions;
+          } catch (error) {
+            console.warn('Failed to generate linking suggestions for article:', error);
+            // Continue without linking suggestions
+          }
+          
+          generatedArticles.push(article);
+          
+          // Small delay between approach generations
+          if (i === 0) {
+            await new Promise(resolve => setTimeout(resolve, 1500));
+          }
+        }
 
-        // Update keyword status and add article
+        // Update keyword status and add articles
         setKeywords(prev => prev.map(k => 
-          k.id === keyword.id ? { ...k, status: 'completed', article } : k
+          k.id === keyword.id ? { ...k, status: 'completed', articles: generatedArticles } : k
         ));
         
-        setArticles(prev => [...prev, article]);
+        setArticles(prev => [...prev, ...generatedArticles]);
         
-        // Small delay between requests to avoid rate limiting
+        // Small delay between keywords to avoid rate limiting
         await new Promise(resolve => setTimeout(resolve, 1000));
       } catch (error) {
         console.error('Error generating blog post:', error);
@@ -165,15 +471,77 @@ function App() {
   };
 
   const handleCopyToClipboard = async (article: Article) => {
-    const content = formatWordPressContent(article.title, article.body);
-    const success = await copyToClipboard(content);
+    let content: string;
+    const articleId = `${article.keyword}-${article.approach || 'default'}`;
     
-    if (success) {
-      setCopiedArticleId(article.keyword);
-      setTimeout(() => setCopiedArticleId(null), 2000);
-    } else {
-      alert('Failed to copy to clipboard');
+    try {
+      // Check if we need to convert format
+      if (article.originalFormat && article.originalFormat !== outputFormat) {
+        console.log(`Converting from ${article.originalFormat} to ${outputFormat}...`);
+        
+        // Show loading state for conversion
+        setConvertingArticleId(articleId);
+        
+        // Dynamic format conversion - regenerate content in new format
+        try {
+          const convertedPost = await geminiService.convertFormat(
+            article.title,
+            article.tldr, 
+            article.body,
+            article.originalFormat,
+            outputFormat
+          );
+          
+          if (!convertedPost.title || !convertedPost.body) {
+            throw new Error('Invalid conversion response');
+          }
+          
+          content = formatContent(convertedPost.title, convertedPost.body, outputFormat);
+          console.log('Format conversion successful');
+        } catch (conversionError) {
+          console.warn('Format conversion failed, using original content:', conversionError);
+          content = formatContent(article.title, article.body, outputFormat);
+        } finally {
+          // Clear loading state
+          setConvertingArticleId(null);
+        }
+      } else {
+        // Use original content
+        content = formatContent(article.title, article.body, outputFormat);
+      }
+      
+      // Ensure content is valid
+      if (!content || content.trim().length === 0) {
+        throw new Error('Content is empty or invalid');
+      }
+      
+      console.log('Attempting to copy content to clipboard...', { contentLength: content.length });
+      const success = await copyToClipboard(content);
+      
+      if (success) {
+        setCopiedArticleId(articleId);
+        setTimeout(() => setCopiedArticleId(null), 2000);
+        console.log('Successfully copied to clipboard');
+      } else {
+        throw new Error('Clipboard copy returned false');
+      }
+    } catch (error) {
+      console.error('Copy to clipboard failed:', error);
+      setConvertingArticleId(null); // Clear loading state on error
+      alert(`Failed to copy to clipboard: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  };
+
+  const getFormatDisplayName = (format: string): string => {
+    const formatNames: { [key: string]: string } = {
+      'wordpress': 'WordPress',
+      'shopify': 'Shopify',
+      'ghost': 'Ghost',
+      'medium': 'Medium',
+      'html': 'HTML',
+      'markdown': 'Markdown'
+    };
+    return formatNames[format] || 'WordPress';
   };
 
   const clearAllKeywords = () => {
@@ -234,9 +602,11 @@ function App() {
 
   return (
     <div className="app">
-      <button className="mobile-menu-toggle" onClick={() => setIsMobileMenuOpen(true)}>
-        <Menu size={20} />
-      </button>
+      {!isMobileMenuOpen && (
+        <button className="mobile-menu-toggle" onClick={() => setIsMobileMenuOpen(true)}>
+          <Menu size={20} />
+        </button>
+      )}
       
       <button className="theme-toggle" onClick={toggleTheme}>
         {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
@@ -313,7 +683,31 @@ function App() {
           />
         </div>
         
-        <button 
+        <div className="format-section">
+          <h3 className="section-title">Output Format</h3>
+          <select 
+            className="format-select"
+            value={outputFormat} 
+            onChange={(e) => setOutputFormat(e.target.value)}
+          >
+            <option value="wordpress">WordPress</option>
+            <option value="shopify">Shopify Blog</option>
+            <option value="ghost">Ghost CMS</option>
+            <option value="medium">Medium</option>
+            <option value="html">Generic HTML</option>
+            <option value="markdown">Pure Markdown</option>
+          </select>
+          <p className="format-description">
+            {outputFormat === 'wordpress' && 'Optimized HTML for WordPress posts with proper heading structure.'}
+            {outputFormat === 'shopify' && 'HTML formatted for Shopify blog posts with commercial focus.'}
+            {outputFormat === 'ghost' && 'Clean Markdown format perfect for Ghost CMS publishing.'}
+            {outputFormat === 'medium' && 'Rich text format optimized for Medium publications.'}
+            {outputFormat === 'html' && 'Standard HTML markup that works with most platforms.'}
+            {outputFormat === 'markdown' && 'Pure Markdown format for maximum compatibility.'}
+          </p>
+        </div>
+        
+        <button
           className="generate-button"
           onClick={generateBlogPosts}
           disabled={isGenerating || keywords.filter(k => k.status === 'pending').length === 0}
@@ -368,10 +762,6 @@ function App() {
       {/* Main Content */}
       <div className="main-content">
         <div className="main-header">
-          <div>
-            <h2 className="main-title">Generated Articles</h2>
-            <p className="main-subtitle">High-quality blog posts ready for WordPress</p>
-          </div>
           <div className="nav-buttons">
             <button 
               className={`nav-button ${currentView === 'articles' ? 'active' : ''}`}
@@ -398,49 +788,72 @@ function App() {
                 <h3 className="empty-state-title">Welcome to Keyword Alchemist</h3>
                 <p className="empty-state-text">
                   Upload a keyword file, click "Generate Posts", and watch the magic happen. 
-                  Your generated posts will appear here, ready to copy and paste into WordPress.
+                  Your generated posts will appear here, ready to copy and paste into {getFormatDisplayName(outputFormat)}.
                 </p>
               </div>
             ) : (
-              articles.map((article, index) => (
-                <div key={`${article.keyword}-${index}`} className="article-card">
-                  <div className="article-header">
-                    <span className="article-keyword">{article.keyword}</span>
-                    <button 
-                      className="copy-button"
-                      onClick={() => handleCopyToClipboard(article)}
-                    >
-                      {copiedArticleId === article.keyword ? (
-                        <>
-                          <CheckCircle size={16} />
-                          Copied!
-                        </>
-                      ) : (
-                        <>
-                          <Copy size={16} />
-                          Copy to WordPress
-                        </>
-                      )}
-                    </button>
-                  </div>
-                  
-                  <h2 className="article-title">{article.title}</h2>
-                  
-                  <div className="article-tldr">
-                    <h4>TL;DR</h4>
-                    <p>{article.tldr}</p>
-                  </div>
-                  
-                  <div 
-                    className="article-body"
-                    dangerouslySetInnerHTML={{ __html: markdownToHtml(article.body) }}
-                  />
-                  
-                  <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginTop: '20px', paddingTop: '20px', borderTop: '1px solid var(--border-color)' }}>
-                    Word count: {getWordCount(article.body)} words • Generated: {article.createdAt.toLocaleDateString()}
+              <>
+                <div className="articles-header">
+                  <h2 className="articles-title">Your Generated Articles</h2>
+                  <p className="articles-subtitle">
+                    Here are your AI-generated blog posts, ready to copy and paste into {getFormatDisplayName(outputFormat)}. 
+                    Each article is crafted with SEO best practices and engaging content tailored to your keywords.
+                  </p>
+                  <div style={{ 
+                    background: 'var(--bg-tertiary)', 
+                    padding: '12px 16px', 
+                    borderRadius: '8px', 
+                    marginTop: '16px',
+                    border: '1px solid var(--border-color)'
+                  }}>
+                    <p style={{ 
+                      fontSize: '14px', 
+                      color: 'var(--text-secondary)', 
+                      margin: '0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}>
+                      <span style={{ fontSize: '16px' }}>💡</span>
+                      <strong>ProTip:</strong> Check out the SEO linking suggestions at the bottom of each article to optimize your internal and external linking strategy!
+                    </p>
                   </div>
                 </div>
-              ))
+                {(() => {
+                  // Group articles by keyword
+                  const groupedArticles = articles.reduce((acc, article) => {
+                    const keyword = article.keyword;
+                    if (!acc[keyword]) {
+                      acc[keyword] = [];
+                    }
+                    acc[keyword].push(article);
+                    return acc;
+                  }, {} as Record<string, Article[]>);
+
+                  return Object.entries(groupedArticles).map(([keyword, keywordArticles]) => {
+                    // Sort articles by approach for consistent tab order
+                    const sortedArticles = keywordArticles.sort((a, b) => {
+                      if (!a.approach || !b.approach) return 0;
+                      return a.approach.localeCompare(b.approach);
+                    });
+
+                    return (
+                      <ArticleTabView 
+                        key={keyword}
+                        keyword={keyword}
+                        articles={sortedArticles}
+                        outputFormat={outputFormat}
+                        getFormatDisplayName={getFormatDisplayName}
+                        handleCopyToClipboard={handleCopyToClipboard}
+                        copiedArticleId={copiedArticleId}
+                        convertingArticleId={convertingArticleId}
+                        markdownToHtml={markdownToHtml}
+                        getWordCount={getWordCount}
+                      />
+                    );
+                  });
+                })()}
+              </>
             )
           ) : (
             // Pricing Page
@@ -472,6 +885,9 @@ function App() {
                   <h3 className="plan-name">Blogger</h3>
                   <p className="plan-description">Ideal for serious bloggers building an authority site.</p>
                   <div className="plan-price">$50</div>
+                  <div style={{ background: 'var(--success-color)', color: 'white', padding: '4px 12px', borderRadius: '12px', fontSize: '14px', fontWeight: '600', marginBottom: '20px', display: 'inline-block' }}>
+                    Save $9.90 (16%)
+                  </div>
                   <ul className="plan-features">
                     <li>100 Keyword Credits</li>
                     <li>Up to 200 blog posts</li>
@@ -486,6 +902,9 @@ function App() {
                   <h3 className="plan-name">Pro / Agency</h3>
                   <p className="plan-description">For professionals managing multiple sites or high-volume content.</p>
                   <div className="plan-price">$100</div>
+                  <div style={{ background: 'var(--success-color)', color: 'white', padding: '4px 12px', borderRadius: '12px', fontSize: '14px', fontWeight: '600', marginBottom: '20px', display: 'inline-block' }}>
+                    Save $43.76 (30%)
+                  </div>
                   <ul className="plan-features">
                     <li>240 Keyword Credits</li>
                     <li>Up to 480 blog posts</li>
