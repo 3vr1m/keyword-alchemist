@@ -130,3 +130,4 @@ If you encounter any issues or have questions, please open an issue on GitHub.
 ---
 
 **Made with ❤️ for content creators and bloggers**
+ 
