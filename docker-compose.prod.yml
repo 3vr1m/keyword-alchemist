@@ -23,8 +23,9 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3002
-      - GEMINI_API_KEY=AIzaSyDY2uU3oWKPiT40d7g4CAQBlqbWmKueJGc
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
     volumes:
+      - ./backend/data:/app/data
       - ./backend/credit_system.db:/app/credit_system.db
 
 networks:

@@ -15,8 +15,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies and rebuild native modules for Linux
-RUN npm ci --only=production && npm rebuild better-sqlite3
+# Install dependencies (this will build native modules for Linux)
+RUN npm ci --only=production
 
 # Copy source code
 COPY . .

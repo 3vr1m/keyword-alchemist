@@ -35,16 +35,14 @@ if [ "$SERVER_IP" = "your-server-ip" ]; then
     exit 1
 fi
 
-# Build the project locally first
-print_status "Building the project locally..."
-npm run build
-
-if [ $? -ne 0 ]; then
-    print_error "Build failed. Please fix the errors and try again."
+# Check if Docker is available
+print_status "Checking Docker installation..."
+if ! command -v docker &> /dev/null; then
+    print_error "Docker is not installed or not in PATH. Please install Docker first."
     exit 1
 fi
 
-print_status "Build successful!"
+print_status "Docker found!"
 
 # Create deployment directory on server
 print_status "Creating deployment directory on server..."
@@ -52,21 +50,33 @@ ssh root@$SERVER_IP "mkdir -p $REMOTE_PATH"
 
 # Copy files to server
 print_status "Copying files to server..."
-rsync -avz --exclude 'node_modules' --exclude '.git' --exclude 'build' . root@$SERVER_IP:$REMOTE_PATH/
+rsync -avz --exclude 'node_modules' --exclude '.git' --exclude 'build' --exclude '.env*' . root@$SERVER_IP:$REMOTE_PATH/
 
 # Build and run on server
 print_status "Building and starting container on server..."
 ssh root@$SERVER_IP << EOF
     cd $REMOTE_PATH
     
+    # Check if production environment file exists
+    if [ ! -f .env.production ]; then
+        echo "⚠️  Creating .env.production template..."
+        cp .env.production.example .env.production
+        echo "❗ Please edit .env.production and add your API keys before continuing."
+        echo "❗ Run: nano .env.production"
+        exit 1
+    fi
+    
+    # Load environment variables
+    export \$(cat .env.production | grep -v '^#' | xargs)
+    
     # Stop existing container if running
-    docker-compose down 2>/dev/null || true
+    docker compose -f docker-compose.prod.yml down 2>/dev/null || true
     
     # Build and start the new container
-    docker-compose up -d --build
+    docker compose -f docker-compose.prod.yml up -d --build
     
     # Show container status
-    docker-compose ps
+    docker compose -f docker-compose.prod.yml ps
     
     echo "✅ Deployment complete!"
     echo "🌐 Application should be available on port 3001"
