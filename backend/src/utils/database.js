@@ -63,19 +63,43 @@ class DatabaseManager {
       // Check if estimated_cost_usd column exists in usage_logs
       const usageLogsColumns = this.db.prepare("PRAGMA table_info(usage_logs)").all();
       const hasEstimatedCostInUsageLogs = usageLogsColumns.some(col => col.name === 'estimated_cost_usd');
+      const hasOutputFormatInUsageLogs = usageLogsColumns.some(col => col.name === 'output_format');
       
       if (!hasEstimatedCostInUsageLogs) {
         this.db.exec('ALTER TABLE usage_logs ADD COLUMN estimated_cost_usd REAL DEFAULT 0.0');
         console.log('Added estimated_cost_usd column to usage_logs table');
       }
       
-      // Check if estimated_cost_usd column exists in keyword_analytics
+      if (!hasOutputFormatInUsageLogs) {
+        this.db.exec("ALTER TABLE usage_logs ADD COLUMN output_format TEXT DEFAULT 'wordpress'");
+        console.log('Added output_format column to usage_logs table');
+      }
+      
+      // Check if columns exist in keyword_analytics
       const keywordAnalyticsColumns = this.db.prepare("PRAGMA table_info(keyword_analytics)").all();
       const hasEstimatedCostInKeywordAnalytics = keywordAnalyticsColumns.some(col => col.name === 'estimated_cost_usd');
+      const hasOutputFormatInKeywordAnalytics = keywordAnalyticsColumns.some(col => col.name === 'output_format');
+      const hasWordCountInKeywordAnalytics = keywordAnalyticsColumns.some(col => col.name === 'word_count');
+      const hasProcessingTimeInKeywordAnalytics = keywordAnalyticsColumns.some(col => col.name === 'processing_time_ms');
       
       if (!hasEstimatedCostInKeywordAnalytics) {
         this.db.exec('ALTER TABLE keyword_analytics ADD COLUMN estimated_cost_usd REAL DEFAULT 0.0');
         console.log('Added estimated_cost_usd column to keyword_analytics table');
+      }
+      
+      if (!hasOutputFormatInKeywordAnalytics) {
+        this.db.exec("ALTER TABLE keyword_analytics ADD COLUMN output_format TEXT DEFAULT 'wordpress'");
+        console.log('Added output_format column to keyword_analytics table');
+      }
+      
+      if (!hasWordCountInKeywordAnalytics) {
+        this.db.exec('ALTER TABLE keyword_analytics ADD COLUMN word_count INTEGER');
+        console.log('Added word_count column to keyword_analytics table');
+      }
+      
+      if (!hasProcessingTimeInKeywordAnalytics) {
+        this.db.exec('ALTER TABLE keyword_analytics ADD COLUMN processing_time_ms INTEGER');
+        console.log('Added processing_time_ms column to keyword_analytics table');
       }
     } catch (error) {
       console.error('Migration error:', error);
