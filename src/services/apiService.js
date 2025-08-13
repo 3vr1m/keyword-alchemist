@@ -6,11 +6,31 @@ class ApiService {
   constructor() {
     this.api = axios.create({
       baseURL: API_BASE_URL,
-      timeout: 30000,
+      timeout: 10000, // Reduce timeout to 10 seconds for faster feedback
       headers: {
         'Content-Type': 'application/json',
       },
     });
+
+    // Add request interceptor for debugging
+    this.api.interceptors.request.use(request => {
+      console.log('API Request:', request.method.toUpperCase(), request.url);
+      return request;
+    });
+
+    // Add response interceptor for error handling
+    this.api.interceptors.response.use(
+      response => response,
+      error => {
+        console.error('API Error:', {
+          status: error.response?.status,
+          data: error.response?.data,
+          message: error.message,
+          code: error.code
+        });
+        return Promise.reject(error);
+      }
+    );
   }
 
   async validateAccessKey(accessKey) {

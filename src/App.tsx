@@ -367,13 +367,31 @@ function App() {
     setKeyError("");
 
     try {
+      console.log('Validating access key:', key.trim());
       const response = await apiService.validateAccessKey(key.trim());
+      console.log('Validation response:', response);
       setCreditInfo(response);
       setKeyError("");
       return true;
     } catch (error: any) {
       console.error('Access key validation failed:', error);
-      setKeyError(error.response?.data?.error || "Invalid access key");
+      
+      let errorMessage = "Invalid access key";
+      
+      // Handle different types of errors
+      if (error.code === 'ECONNABORTED' || error.code === 'ERR_NETWORK') {
+        errorMessage = "Unable to connect to server. Please check your internet connection.";
+      } else if (error.response?.status === 404) {
+        errorMessage = "API endpoint not found. Please contact support.";
+      } else if (error.response?.status === 500) {
+        errorMessage = "Server error. Please try again later.";
+      } else if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      setKeyError(errorMessage);
       setCreditInfo(null);
       return false;
     } finally {
@@ -413,8 +431,9 @@ function App() {
   };
 
   const generateBlogPosts = async () => {
-    if (!geminiService.isConfigured()) {
-      setShowApiKeyInput(true);
+    // Check if we have a valid access key and credits
+    if (!creditInfo || creditInfo.creditsRemaining <= 0) {
+      alert('Please validate your access key first or purchase more credits!');
       return;
     }
 
@@ -424,80 +443,73 @@ function App() {
       return;
     }
 
+    // Check if we have enough credits for all pending keywords
+    if (pendingKeywords.length > creditInfo.creditsRemaining) {
+      alert(`You have ${creditInfo.creditsRemaining} credits remaining, but you're trying to process ${pendingKeywords.length} keywords. Please reduce your keyword list or purchase more credits.`);
+      return;
+    }
+
     setIsGenerating(true);
     
-    for (const keyword of pendingKeywords) {
-      // Update status to processing
-      setKeywords(prev => prev.map(k => 
-        k.id === keyword.id ? { ...k, status: 'processing' } : k
-      ));
-
-      try {
-        // Generate two different approaches for each keyword
-        const approaches = ['Option 1', 'Option 2'];
-        const generatedArticles: Article[] = [];
+    try {
+      // Use the backend API to process all keywords at once
+      const response = await apiService.processKeywords(accessKey, pendingKeywords.map(k => k.text));
+      
+      // Process the response and update the UI
+      const { articles: generatedArticles, creditsRemaining } = response;
+      
+      // Update credit info
+      setCreditInfo(prev => prev ? {
+        ...prev,
+        creditsRemaining: creditsRemaining
+      } : null);
+      
+      // Process each generated article
+      const processedArticles: Article[] = [];
+      
+      for (const articleData of generatedArticles) {
+        const article: Article = {
+          title: articleData.title,
+          tldr: articleData.tldr,
+          body: articleData.body,
+          keyword: articleData.keyword,
+          approach: articleData.approach,
+          originalFormat: outputFormat,
+          createdAt: new Date(),
+          linkingSuggestions: articleData.linkingSuggestions
+        };
         
-        for (let i = 0; i < approaches.length; i++) {
-          const approachPrompt = i === 0 
-            ? `Focus on practical, how-to content with step-by-step guidance.`
-            : `Focus on comprehensive analysis, trends, and expert insights.`;
-          
-          const blogPost = await geminiService.generateBlogPost(
-            keyword.text, 
-            outputFormat, 
-            approachPrompt
-          );
-          
-          const article: Article = {
-            title: blogPost.title,
-            tldr: blogPost.tldr,
-            body: blogPost.body,
-            keyword: keyword.text,
-            approach: approaches[i],
-            originalFormat: outputFormat,
-            createdAt: new Date()
-          };
-          
-          // Generate linking suggestions for this article
-          try {
-            const linkingSuggestions = await geminiService.generateLinkingSuggestions(
-              blogPost.title,
-              blogPost.body,
-              keyword.text
-            );
-            article.linkingSuggestions = linkingSuggestions;
-          } catch (error) {
-            console.warn('Failed to generate linking suggestions for article:', error);
-            // Continue without linking suggestions
-          }
-          
-          generatedArticles.push(article);
-          
-          // Small delay between approach generations
-          if (i === 0) {
-            await new Promise(resolve => setTimeout(resolve, 1500));
-          }
+        processedArticles.push(article);
+      }
+      
+      // Update keyword statuses to completed
+      setKeywords(prev => prev.map(k => {
+        if (pendingKeywords.find(pk => pk.id === k.id)) {
+          const keywordArticles = processedArticles.filter(a => a.keyword === k.text);
+          return { ...k, status: 'completed', articles: keywordArticles };
         }
-
-        // Update keyword status and add articles
-        setKeywords(prev => prev.map(k => 
-          k.id === keyword.id ? { ...k, status: 'completed', articles: generatedArticles } : k
-        ));
-        
-        setArticles(prev => [...prev, ...generatedArticles]);
-        
-        // Small delay between keywords to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      } catch (error) {
-        console.error('Error generating blog post:', error);
-        setKeywords(prev => prev.map(k => 
-          k.id === keyword.id ? { 
+        return k;
+      }));
+      
+      // Add all processed articles
+      setArticles(prev => [...prev, ...processedArticles]);
+      
+    } catch (error: any) {
+      console.error('Error generating blog posts:', error);
+      
+      // Update all pending keywords to error status
+      setKeywords(prev => prev.map(k => {
+        if (pendingKeywords.find(pk => pk.id === k.id)) {
+          return { 
             ...k, 
             status: 'error', 
-            error: error instanceof Error ? error.message : 'Unknown error'
-          } : k
-        ));
-      }
+            error: error.response?.data?.error || error.message || 'Unknown error'
+          };
+        }
+        return k;
+      }));
+      
+      alert(`Failed to generate blog posts: ${error.response?.data?.error || error.message || 'Unknown error'}`);
     }
 
     setIsGenerating(false);
@@ -705,7 +717,23 @@ function App() {
             placeholder="Enter access key (e.g., KWA-XXXXXX)"
             className="format-select"
           />
-          <button onClick={() => validateAccessKey(accessKey)}  style={{ marginTop: '8px', padding: '8px', width: 'auto', display: 'inline-block', fontSize: '13px' }}>
+          <button 
+            onClick={() => validateAccessKey(accessKey)}
+            disabled={isValidatingKey || !accessKey.trim()}
+            style={{
+              marginTop: '8px',
+              width: '100%',
+              padding: '12px',
+              background: isValidatingKey || !accessKey.trim() ? 'var(--bg-secondary)' : 'var(--accent-primary)',
+              color: isValidatingKey || !accessKey.trim() ? 'var(--text-muted)' : 'white',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontWeight: '600',
+              cursor: isValidatingKey || !accessKey.trim() ? 'not-allowed' : 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          >
             {isValidatingKey ? 'Validating...' : 'Validate Key'}
           </button>
           {keyError && <p style={{ color: 'red', fontSize: '12px', margin: '5px 0' }}>{keyError}</p>}
@@ -760,7 +788,12 @@ function App() {
         <button
           className="generate-button"
           onClick={generateBlogPosts}
-          disabled={isGenerating || keywords.filter(k => k.status === 'pending').length === 0}
+          disabled={
+            isGenerating || 
+            keywords.filter(k => k.status === 'pending').length === 0 || 
+            !creditInfo || 
+            creditInfo.creditsRemaining <= 0
+          }
         >
           {isGenerating ? (
             <>
