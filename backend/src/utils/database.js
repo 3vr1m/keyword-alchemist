@@ -54,6 +54,24 @@ class DatabaseManager {
       )
     `);
     
+    // Payment logs table (for Stripe webhook tracking)
+    this.db.exec(`
+      CREATE TABLE IF NOT EXISTS payment_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        session_id TEXT UNIQUE,
+        access_key TEXT,
+        plan TEXT NOT NULL,
+        credits INTEGER NOT NULL,
+        amount_paid INTEGER NOT NULL,
+        customer_email TEXT,
+        stripe_customer_id TEXT,
+        payment_status TEXT NOT NULL CHECK (payment_status IN ('completed', 'failed', 'pending')),
+        error_message TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (access_key) REFERENCES access_keys (key)
+      )
+    `);
+    
     // Migration: Add missing columns if they don't exist
     this.runMigrations();
   }
@@ -258,6 +276,34 @@ class DatabaseManager {
     }
   }
 
+  // Log payment transaction
+  logPayment(paymentData) {
+    try {
+      const stmt = this.db.prepare(`
+        INSERT OR REPLACE INTO payment_logs 
+        (session_id, access_key, plan, credits, amount_paid, customer_email, stripe_customer_id, payment_status, error_message)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      
+      const result = stmt.run(
+        paymentData.sessionId,
+        paymentData.accessKey || null,
+        paymentData.plan,
+        paymentData.credits,
+        paymentData.amountPaid,
+        paymentData.customerEmail,
+        paymentData.stripeCustomerId || null,
+        paymentData.paymentStatus,
+        paymentData.errorMessage || null
+      );
+      
+      return Promise.resolve(result.lastInsertRowid);
+    } catch (error) {
+      console.error('Error logging payment:', error);
+      return Promise.reject(error);
+    }
+  }
+
   // Get admin dashboard analytics
   getAdminAnalytics() {
     try {
@@ -267,6 +313,11 @@ class DatabaseManager {
       const totalKeywordAttempts = this.db.prepare('SELECT COUNT(*) as count FROM keyword_analytics').get().count;
       const successfulKeywords = this.db.prepare('SELECT COUNT(*) as count FROM keyword_analytics WHERE status = \'success\'').get().count;
       const failedKeywords = this.db.prepare('SELECT COUNT(*) as count FROM keyword_analytics WHERE status = \'failed\'').get().count;
+      
+      // Payment stats
+      const totalPayments = this.db.prepare('SELECT COUNT(*) as count FROM payment_logs WHERE payment_status = \'completed\'').get().count;
+      const totalRevenue = this.db.prepare('SELECT COALESCE(SUM(amount_paid), 0) as total FROM payment_logs WHERE payment_status = \'completed\'').get().total;
+      const failedPayments = this.db.prepare('SELECT COUNT(*) as count FROM payment_logs WHERE payment_status = \'failed\'').get().count;
       
       // API call counts and cost estimation
       const totalCreditsUsed = this.db.prepare('SELECT COALESCE(SUM(credits_deducted), 0) as total FROM usage_logs').get().total;
@@ -335,6 +386,24 @@ class DatabaseManager {
         FROM usage_logs
       `).get();
       
+      // Recent payments (last 48 hours)
+      const recentPayments = this.db.prepare(`
+        SELECT session_id, plan, credits, amount_paid, customer_email, payment_status, created_at
+        FROM payment_logs 
+        WHERE created_at > datetime('now', '-48 hours')
+        ORDER BY created_at DESC
+        LIMIT 20
+      `).all();
+      
+      // Plan distribution from payments
+      const planDistribution = this.db.prepare(`
+        SELECT plan, COUNT(*) as count, SUM(amount_paid) as revenue
+        FROM payment_logs 
+        WHERE payment_status = 'completed'
+        GROUP BY plan
+        ORDER BY count DESC
+      `).all();
+
       return Promise.resolve({
         summary: {
           totalKeys,
@@ -344,7 +413,10 @@ class DatabaseManager {
           failedKeywords,
           successRate: totalKeywordAttempts > 0 ? ((successfulKeywords / totalKeywordAttempts) * 100).toFixed(1) : 0,
           totalCreditsUsed,
-          totalEstimatedCost: parseFloat(totalEstimatedCost.toFixed(4))
+          totalEstimatedCost: parseFloat(totalEstimatedCost.toFixed(4)),
+          totalPayments,
+          totalRevenue: totalRevenue / 100, // Convert cents to dollars
+          failedPayments
         },
         formatStats,
         revenueStats: {
@@ -354,7 +426,9 @@ class DatabaseManager {
         recentFailures,
         popularKeywords,
         mostUsedKeywords,
-        dailyStats
+        dailyStats,
+        recentPayments,
+        planDistribution
       });
     } catch (error) {
       return Promise.reject(error);

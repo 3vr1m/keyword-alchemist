@@ -1,0 +1,6 @@
+
+> keyword-alchemist-backend@1.0.0 start
+> node server.js
+
+🚀 Keyword Alchemist API running on port 3002
+🔗 Health check: http://localhost:3002/api/health

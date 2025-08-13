@@ -6,6 +6,7 @@ const rateLimit = require('express-rate-limit');
 
 const database = require('./src/utils/database');
 const keyGenerator = require('./src/utils/keyGenerator');
+const stripeService = require('./src/services/stripeService');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -20,6 +21,33 @@ app.use(cors({
   ],
   credentials: true
 }));
+// Stripe webhook endpoint (before express.json middleware)
+app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  const signature = req.headers['stripe-signature'];
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  if (!signature || !endpointSecret) {
+    console.error('Missing Stripe signature or webhook secret');
+    return res.status(400).json({ error: 'Missing Stripe signature or webhook secret' });
+  }
+
+  try {
+    const result = await stripeService.processWebhookEvent(
+      req.body,
+      signature,
+      endpointSecret,
+      database,
+      keyGenerator
+    );
+
+    console.log('[Stripe] Webhook processed successfully:', result);
+    res.status(200).json({ received: true, result });
+  } catch (error) {
+    console.error('[Stripe] Webhook processing failed:', error);
+    res.status(400).json({ error: `Webhook processing failed: ${error.message}` });
+  }
+});
+
 app.use(express.json({ limit: '10mb' }));
 
 // Rate limiting
@@ -426,6 +454,105 @@ app.post('/api/admin/get-keys', async (req, res) => {
   } catch (error) {
     console.error('Get keys error:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Stripe: Create checkout session
+app.post('/api/stripe/create-checkout', async (req, res) => {
+  try {
+    const { plan, email, successUrl, cancelUrl } = req.body;
+    
+    if (!plan || !email) {
+      return res.status(400).json({ error: 'Plan and email are required' });
+    }
+    
+    // Validate plan
+    const planConfig = stripeService.getPlan(plan);
+    if (!planConfig) {
+      return res.status(400).json({ error: 'Invalid plan selected' });
+    }
+    
+    const session = await stripeService.createCheckoutSession(
+      plan,
+      email,
+      successUrl || `${process.env.FRONTEND_URL || 'http://localhost:3000'}?payment=success`,
+      cancelUrl || `${process.env.FRONTEND_URL || 'http://localhost:3000'}?payment=cancelled`
+    );
+    
+    res.json({
+      success: true,
+      sessionId: session.id,
+      url: session.url,
+      plan: planConfig
+    });
+  } catch (error) {
+    console.error('Create checkout session error:', error);
+    res.status(500).json({ 
+      error: 'Failed to create checkout session',
+      details: error.message
+    });
+  }
+});
+
+// Stripe: Get available plans
+app.get('/api/stripe/plans', (req, res) => {
+  try {
+    const plans = stripeService.getAllPlans();
+    res.json({
+      success: true,
+      plans
+    });
+  } catch (error) {
+    console.error('Get plans error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Stripe: Verify payment success (optional - for frontend confirmation)
+app.post('/api/stripe/verify-payment', async (req, res) => {
+  try {
+    const { sessionId } = req.body;
+    
+    if (!sessionId) {
+      return res.status(400).json({ error: 'Session ID is required' });
+    }
+    
+    const session = await stripeService.retrieveSession(sessionId);
+    
+    if (session.payment_status === 'paid') {
+      // Find the access key from our database
+      // Find the access key from our database using a proper method
+      const paymentLog = await new Promise((resolve, reject) => {
+        try {
+          const stmt = database.db.prepare('SELECT * FROM payment_logs WHERE session_id = ?');
+          const result = stmt.get(sessionId);
+          resolve(result);
+        } catch (error) {
+          reject(error);
+        }
+      });
+      
+      res.json({
+        success: true,
+        paid: true,
+        accessKey: paymentLog?.access_key,
+        plan: session.metadata?.plan,
+        credits: parseInt(session.metadata?.credits),
+        customerEmail: session.customer_email
+      });
+    } else {
+      res.json({
+        success: true,
+        paid: false,
+        status: session.payment_status
+      });
+    }
+  } catch (error) {
+    console.error('Verify payment error:', error);
+    res.status(500).json({ 
+      error: 'Failed to verify payment',
+      details: error.message 
+    });
   }
 });
 

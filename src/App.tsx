@@ -286,6 +286,10 @@ function App() {
   const [keyError, setKeyError] = useState("");
   const [outputFormat, setOutputFormat] = useState<string>('wordpress');
   const [convertingArticleId, setConvertingArticleId] = useState<string | null>(null);
+  const [processingPayment, setProcessingPayment] = useState<string | null>(null);
+  const [purchaseEmail, setPurchaseEmail] = useState('');
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -296,7 +300,18 @@ function App() {
       setTheme(savedTheme);
     }
     
-    // API key configuration removed - now using backend-only approach
+    // Check for payment success/cancellation from URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment');
+    const sessionId = urlParams.get('session_id');
+    
+    if (paymentStatus === 'success' && sessionId) {
+      handlePaymentSuccess(sessionId);
+    } else if (paymentStatus === 'cancelled') {
+      alert('Payment was cancelled. You can try again anytime!');
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   }, []);
 
   // Apply theme to document
@@ -577,6 +592,85 @@ function App() {
       }
       return prev;
     });
+  };
+
+  // Handle plan selection - show email modal
+  const handlePlanClick = (plan: string) => {
+    setSelectedPlan(plan);
+    setShowEmailModal(true);
+  };
+
+  // Handle email modal submission
+  const handleEmailSubmit = async () => {
+    if (!purchaseEmail.trim()) {
+      alert('Please enter your email address!');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(purchaseEmail)) {
+      alert('Please enter a valid email address!');
+      return;
+    }
+
+    if (!selectedPlan) {
+      alert('No plan selected!');
+      return;
+    }
+
+    setProcessingPayment(selectedPlan);
+    setShowEmailModal(false);
+
+    try {
+      const response = await apiService.createStripeCheckout(selectedPlan, purchaseEmail);
+      
+      if (response.success && response.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = response.url;
+      } else {
+        throw new Error('Failed to create checkout session');
+      }
+    } catch (error: any) {
+      console.error('Payment initiation failed:', error);
+      alert(`Payment setup failed: ${error.response?.data?.error || error.message || 'Unknown error'}`);
+    } finally {
+      setProcessingPayment(null);
+    }
+  };
+
+  // Close email modal
+  const closeEmailModal = () => {
+    setShowEmailModal(false);
+    setSelectedPlan(null);
+    setProcessingPayment(null);
+  };
+
+  // Handle payment success from Stripe redirect
+  const handlePaymentSuccess = async (sessionId: string) => {
+    try {
+      const response = await apiService.verifyPayment(sessionId);
+      
+      if (response.success && response.paid && response.accessKey) {
+        // Set the access key automatically
+        setAccessKey(response.accessKey);
+        
+        // Auto-validate the key to get credit info
+        await validateAccessKey(response.accessKey);
+        
+        // Switch to articles view
+        setCurrentView('articles');
+        
+        // Show success message with access key
+        alert(`🎉 Payment successful!\n\nYour access key: ${response.accessKey}\n\nThis key has been automatically added and you're ready to generate blog posts!`);
+        
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else {
+        alert('Payment verification failed. Please contact support if you believe this is an error.');
+      }
+    } catch (error: any) {
+      console.error('Payment verification failed:', error);
+      alert('Failed to verify payment. Please contact support with your session ID: ' + sessionId);
+    }
   };
 
   // Status circle component
@@ -1051,7 +1145,6 @@ function App() {
                   well-researched blog post. Your plan determines how many of these powerful 
                   transformations you can perform.
                 </p>
-              </div>
               
               <div className="pricing-cards">
                 <div className="pricing-card">
@@ -1063,7 +1156,13 @@ function App() {
                     <li>Up to 20 blog posts</li>
                     <li>AI-powered generation</li>
                   </ul>
-                  <button className="plan-button">Get Started</button>
+                  <button 
+                    className="plan-button"
+                    onClick={() => handlePlanClick('basic')}
+                    disabled={processingPayment === 'basic'}
+                  >
+                    {processingPayment === 'basic' ? 'Processing...' : 'Get Started'}
+                  </button>
                   <p className="plan-note">One-time purchase, credits never expire.</p>
                 </div>
                 
@@ -1080,7 +1179,13 @@ function App() {
                     <li>AI-powered generation</li>
                     <li>Priority support</li>
                   </ul>
-                  <button className="plan-button">Choose Plan</button>
+                  <button 
+                    className="plan-button"
+                    onClick={() => handlePlanClick('blogger')}
+                    disabled={processingPayment === 'blogger'}
+                  >
+                    {processingPayment === 'blogger' ? 'Processing...' : 'Choose Plan'}
+                  </button>
                   <p className="plan-note">One-time purchase, credits never expire.</p>
                 </div>
                 
@@ -1097,7 +1202,13 @@ function App() {
                     <li>AI-powered generation</li>
                     <li>Priority support</li>
                   </ul>
-                  <button className="plan-button">Choose Plan</button>
+                  <button 
+                    className="plan-button"
+                    onClick={() => handlePlanClick('pro')}
+                    disabled={processingPayment === 'pro'}
+                  >
+                    {processingPayment === 'pro' ? 'Processing...' : 'Choose Plan'}
+                  </button>
                   <p className="plan-note">One-time purchase, credits never expire.</p>
                 </div>
               </div>
@@ -1105,6 +1216,189 @@ function App() {
           )}
         </div>
       </div>
+      
+      {/* Email Modal */}
+      {showEmailModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: 'var(--bg-primary)',
+            padding: '32px',
+            borderRadius: '16px',
+            border: '1px solid var(--border-color)',
+            maxWidth: '450px',
+            width: '90%',
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '24px'
+            }}>
+              <h3 style={{
+                margin: 0,
+                fontSize: '24px',
+                fontWeight: '700',
+                color: 'var(--text-primary)'
+              }}>
+                Complete Your Purchase
+              </h3>
+              <button
+                onClick={closeEmailModal}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-secondary)',
+                  cursor: 'pointer',
+                  padding: '4px'
+                }}
+              >
+                <X size={24} />
+              </button>
+            </div>
+            
+            {selectedPlan && (
+              <div style={{
+                background: 'var(--bg-tertiary)',
+                padding: '16px',
+                borderRadius: '8px',
+                marginBottom: '24px',
+                border: '1px solid var(--border-color)'
+              }}>
+                <h4 style={{
+                  margin: '0 0 8px 0',
+                  fontSize: '18px',
+                  color: 'var(--accent-primary)',
+                  textTransform: 'capitalize'
+                }}>
+                  {selectedPlan} Plan
+                </h4>
+                <p style={{
+                  margin: 0,
+                  color: 'var(--text-secondary)',
+                  fontSize: '14px'
+                }}>
+                  {selectedPlan === 'basic' && '$5.99 • 10 credits • Up to 20 blog posts'}
+                  {selectedPlan === 'blogger' && '$50 • 50 credits • Up to 100 blog posts'}
+                  {selectedPlan === 'pro' && '$100 • 240 credits • Up to 480 blog posts'}
+                </p>
+              </div>
+            )}
+            
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '16px',
+                fontWeight: '600',
+                color: 'var(--text-primary)',
+                marginBottom: '8px'
+              }}>
+                📧 Email Address
+              </label>
+              <input
+                type="email"
+                value={purchaseEmail}
+                onChange={(e) => setPurchaseEmail(e.target.value)}
+                placeholder="Enter your email address"
+                autoFocus
+                style={{
+                  width: '100%',
+                  padding: '14px 16px',
+                  border: '2px solid var(--border-color)',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  background: 'var(--bg-primary)',
+                  color: 'var(--text-primary)',
+                  transition: 'all 0.2s ease',
+                  outline: 'none'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0, 123, 255, 0.1)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--border-color)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleEmailSubmit();
+                  }
+                }}
+              />
+              <p style={{
+                fontSize: '14px',
+                color: 'var(--text-secondary)',
+                marginTop: '8px',
+                margin: '8px 0 0 0'
+              }}>
+                Your access key will be automatically generated and you'll be redirected back after payment
+              </p>
+            </div>
+            
+            <div style={{
+              display: 'flex',
+              gap: '12px',
+              justifyContent: 'flex-end'
+            }}>
+              <button
+                onClick={closeEmailModal}
+                style={{
+                  padding: '12px 24px',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: '8px',
+                  background: 'var(--bg-secondary)',
+                  color: 'var(--text-primary)',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleEmailSubmit}
+                disabled={!purchaseEmail.trim() || processingPayment}
+                style={{
+                  padding: '12px 32px',
+                  border: 'none',
+                  borderRadius: '8px',
+                  background: !purchaseEmail.trim() || processingPayment ? 'var(--bg-secondary)' : 'var(--accent-primary)',
+                  color: !purchaseEmail.trim() || processingPayment ? 'var(--text-muted)' : 'white',
+                  cursor: !purchaseEmail.trim() || processingPayment ? 'not-allowed' : 'pointer',
+                  fontSize: '16px',
+                  fontWeight: '700',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                {processingPayment ? (
+                  <>
+                    <div className="loading-spinner" style={{ width: '16px', height: '16px' }} />
+                    Processing...
+                  </>
+                ) : (
+                  'Continue to Payment'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

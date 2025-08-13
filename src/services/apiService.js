@@ -50,6 +50,21 @@ class ApiService {
     const response = await this.api.get('/health');
     return response.data;
   }
+
+  async createStripeCheckout(plan, email) {
+    const response = await this.api.post('/stripe/create-checkout', {
+      plan,
+      email
+    });
+    return response.data;
+  }
+
+  async verifyPayment(sessionId) {
+    const response = await this.api.post('/stripe/verify-payment', {
+      sessionId
+    });
+    return response.data;
+  }
 }
 
 const apiService = new ApiService();
