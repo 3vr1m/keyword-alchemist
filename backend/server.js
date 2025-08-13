@@ -147,18 +147,63 @@ Output the result as a single, valid JSON object with the following structure:
             
             console.log(`[AI] Generated content for ${keyword} (Option ${version}), parsing...`);
             
-            // Parse the JSON response
+            // Parse the JSON response with robust error handling
             let cleanedText = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+            
+            // Additional cleaning for common AI formatting issues
+            cleanedText = cleanedText
+              .replace(/\n\s*\n/g, '\\n\\n') // Replace actual line breaks with escaped ones
+              .replace(/\n/g, '\\n') // Replace remaining newlines
+              .replace(/\t/g, '\\t') // Replace tabs
+              .replace(/"/g, '"') // Fix smart quotes
+              .replace(/"/g, '"') // Fix smart quotes
+              .replace(/'/g, "'") // Fix smart apostrophes
+              .replace(/'/g, "'"); // Fix smart apostrophes
             
             // If that doesn't work, try to find JSON within the text
             if (!cleanedText.startsWith('{')) {
               const jsonMatch = text.match(/\{[\s\S]*\}/);
               if (jsonMatch) {
-                cleanedText = jsonMatch[0];
+                cleanedText = jsonMatch[0]
+                  .replace(/\n\s*\n/g, '\\n\\n')
+                  .replace(/\n/g, '\\n')
+                  .replace(/\t/g, '\\t')
+                  .replace(/"/g, '"')
+                  .replace(/"/g, '"')
+                  .replace(/'/g, "'")
+                  .replace(/'/g, "'");
               }
             }
             
-            const articleData = JSON.parse(cleanedText);
+            let articleData;
+            try {
+              articleData = JSON.parse(cleanedText);
+            } catch (parseError) {
+              console.log(`[AI] First parse failed, attempting fallback parsing...`);
+              // Fallback: Try to extract JSON more aggressively
+              const fallbackMatch = text.match(/\{[\s\S]*?"body"\s*:\s*"[\s\S]*?"[\s\S]*?\}/);
+              if (fallbackMatch) {
+                let fallbackText = fallbackMatch[0]
+                  .replace(/\n/g, '\\n')
+                  .replace(/\r/g, '\\r')
+                  .replace(/\t/g, '\\t')
+                  .replace(/\\\"/g, '\"') // Fix over-escaped quotes
+                  .replace(/"/g, '"')
+                  .replace(/"/g, '"');
+                
+                try {
+                  articleData = JSON.parse(fallbackText);
+                  console.log(`[AI] Fallback parsing succeeded`);
+                } catch (fallbackError) {
+                  console.log(`[AI] Raw response text (first 500 chars):`, text.substring(0, 500));
+                  console.log(`[AI] Cleaned text (first 500 chars):`, cleanedText.substring(0, 500));
+                  throw new Error(`JSON parsing failed: ${parseError.message}. Fallback also failed: ${fallbackError.message}`);
+                }
+              } else {
+                console.log(`[AI] Raw response text (first 500 chars):`, text.substring(0, 500));
+                throw new Error(`JSON parsing failed and no fallback match found: ${parseError.message}`);
+              }
+            }
             
             // Validate the response structure
             if (!articleData.title || !articleData.tldr || !articleData.body) {
