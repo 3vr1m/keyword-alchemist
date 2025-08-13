@@ -1,8 +1,13 @@
 # Backend API Dockerfile
-FROM node:18-alpine
+FROM node:18-slim
 
-# Install build dependencies for native modules and curl for health check
-RUN apk add --no-cache python3 make g++ sqlite-dev curl
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
@@ -10,8 +15,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies and rebuild native modules for Alpine Linux
-RUN npm ci --only=production && npm rebuild sqlite3
+# Install dependencies and rebuild native modules for Linux
+RUN npm ci --only=production && npm rebuild better-sqlite3
 
 # Copy source code
 COPY . .
