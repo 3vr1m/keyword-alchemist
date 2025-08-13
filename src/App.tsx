@@ -6,6 +6,7 @@ import { Keyword, Article, Theme, CurrentView, CreditInfo } from './types';
 import { parseKeywordsFromFile, generateUniqueId, copyToClipboard, formatContent, readFileAsText, validateFileType } from './utils/fileUtils';
 import { markdownToHtml, getWordCount } from './utils/markdownUtils';
 import geminiService from './services/geminiService';
+import AdminDashboard from './components/AdminDashboard';
 
 // ArticleTabView Component for displaying multiple approaches in tabs
 interface ArticleTabViewProps {
@@ -707,6 +708,34 @@ function App() {
           </div>
         </div>
         
+        {/* Admin Dashboard Link - Subtle at bottom */}
+        <div style={{
+          position: 'absolute',
+          bottom: '20px',
+          left: '20px',
+          right: '20px'
+        }}>
+          <div 
+            onClick={() => {
+              setCurrentView('admin');
+              setIsMobileMenuOpen(false);
+            }}
+            style={{
+              fontSize: '11px',
+              color: 'var(--text-muted)',
+              textAlign: 'center',
+              cursor: 'pointer',
+              opacity: 0.5,
+              transition: 'opacity 0.2s',
+              padding: '8px'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+            onMouseLeave={(e) => e.currentTarget.style.opacity = '0.5'}
+          >
+            System Analytics
+          </div>
+        </div>
+        
 
         <div className="upload-section">
           <h3 className="section-title">🔑 Access Key</h3>
@@ -938,6 +967,8 @@ function App() {
                 })()}
               </>
             )
+          ) : currentView === 'admin' ? (
+            <AdminDashboard onClose={() => setCurrentView('articles')} />
           ) : (
             // Pricing Page
             <div className="pricing-container">
