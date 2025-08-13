@@ -53,6 +53,33 @@ class DatabaseManager {
         FOREIGN KEY (access_key) REFERENCES access_keys (key)
       )
     `);
+    
+    // Migration: Add missing columns if they don't exist
+    this.runMigrations();
+  }
+
+  runMigrations() {
+    try {
+      // Check if estimated_cost_usd column exists in usage_logs
+      const usageLogsColumns = this.db.prepare("PRAGMA table_info(usage_logs)").all();
+      const hasEstimatedCostInUsageLogs = usageLogsColumns.some(col => col.name === 'estimated_cost_usd');
+      
+      if (!hasEstimatedCostInUsageLogs) {
+        this.db.exec('ALTER TABLE usage_logs ADD COLUMN estimated_cost_usd REAL DEFAULT 0.0');
+        console.log('Added estimated_cost_usd column to usage_logs table');
+      }
+      
+      // Check if estimated_cost_usd column exists in keyword_analytics
+      const keywordAnalyticsColumns = this.db.prepare("PRAGMA table_info(keyword_analytics)").all();
+      const hasEstimatedCostInKeywordAnalytics = keywordAnalyticsColumns.some(col => col.name === 'estimated_cost_usd');
+      
+      if (!hasEstimatedCostInKeywordAnalytics) {
+        this.db.exec('ALTER TABLE keyword_analytics ADD COLUMN estimated_cost_usd REAL DEFAULT 0.0');
+        console.log('Added estimated_cost_usd column to keyword_analytics table');
+      }
+    } catch (error) {
+      console.error('Migration error:', error);
+    }
   }
 
   // Create new access key
