@@ -274,7 +274,8 @@ function App() {
   const [keywords, setKeywords] = useState<Keyword[]>([]);
   const [articles, setArticles] = useState<Article[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
-  const apiKey = process.env.REACT_APP_GEMINI_API_KEY || '';
+  const [apiKey, setApiKey] = useState('');
+  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [copiedArticleId, setCopiedArticleId] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

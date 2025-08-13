@@ -2,7 +2,15 @@
   "name": "keyword-alchemist",
   "version": "1.0.0",
   "description": "Transform keywords into high-quality blog posts with AI",
-  "keywords": ["blog", "content", "ai", "seo", "wordpress", "gemini", "keywords"],
+  "keywords": [
+    "blog",
+    "content",
+    "ai",
+    "seo",
+    "wordpress",
+    "gemini",
+    "keywords"
+  ],
   "author": "Your Name",
   "license": "MIT",
   "repository": {
@@ -20,6 +28,7 @@
     "@types/node": "^16.18.126",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
+    "axios": "^1.11.0",
     "lucide-react": "^0.539.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
@@ -52,4 +61,3 @@
     ]
   }
 }
- 

@@ -394,3 +394,1310 @@ webpack compiled successfully
 Files successfully emitted, waiting for typecheck results...
 Issues checking in progress...
 No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.tsx
+  Line 1:8:  'apiService' is defined but never used  @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.tsx
+  Line 1:8:  'apiService' is defined but never used  @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.tsx
+  Line 1:8:     'apiService' is defined but never used                   @typescript-eslint/no-unused-vars
+  Line 285:10:  'accessKey' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  Line 285:21:  'setAccessKey' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 286:10:  'creditInfo' is assigned a value but never used          @typescript-eslint/no-unused-vars
+  Line 286:22:  'setCreditInfo' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  Line 287:10:  'isValidatingKey' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 287:27:  'setIsValidatingKey' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 288:10:  'keyError' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  Line 288:20:  'setKeyError' is assigned a value but never used         @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.tsx
+  Line 1:8:     'apiService' is defined but never used                   @typescript-eslint/no-unused-vars
+  Line 285:10:  'accessKey' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  Line 285:21:  'setAccessKey' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 286:10:  'creditInfo' is assigned a value but never used          @typescript-eslint/no-unused-vars
+  Line 286:22:  'setCreditInfo' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  Line 287:10:  'isValidatingKey' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 287:27:  'setIsValidatingKey' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 288:10:  'keyError' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  Line 288:20:  'setKeyError' is assigned a value but never used         @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/services/apiService.js
+  Line 39:1:  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+  Line 39:1:  'EO' is not defined                                                    no-undef
+  Line 40:1:  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+  Line 40:1:  'F' is not defined                                                     no-undef
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/App.tsx
+  Line 285:10:  'accessKey' is assigned a value but never used          @typescript-eslint/no-unused-vars
+  Line 285:21:  'setAccessKey' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  Line 286:10:  'creditInfo' is assigned a value but never used         @typescript-eslint/no-unused-vars
+  Line 287:10:  'isValidatingKey' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 288:10:  'keyError' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  Line 390:9:   'validateAccessKey' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src/services/apiService.js
+  Line 38:1:  Assign instance to a variable before exporting as module default  import/no-anonymous-default-export
+
+ERROR in [eslint] 
+src/services/apiService.js
+  Line 39:1:  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+  Line 39:1:  'EO' is not defined                                                    no-undef
+  Line 40:1:  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+  Line 40:1:  'F' is not defined                                                     no-undef
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
+ERROR in src/App.tsx:390:36
+TS7006: Parameter 'key' implicitly has an 'any' type.
+    388 |
+    389 |   // Validate access key and get credit info
+  > 390 |   const validateAccessKey = async (key) => {
+        |                                    ^^^
+    391 |     if (!key.trim()) {
+    392 |       setKeyError("Please enter an access key");
+    393 |       setCreditInfo(null);
+
+ERROR in src/App.tsx:407:19
+TS18046: 'error' is of type 'unknown'.
+    405 |     } catch (error) {
+    406 |       console.error('Access key validation failed:', error);
+  > 407 |       setKeyError(error.response?.data?.error || "Invalid access key");
+        |                   ^^^^^
+    408 |       setCreditInfo(null);
+    409 |       return false;
+    410 |     } finally {
+
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/services/apiService.js
+  Line 39:1:  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+  Line 39:1:  'EO' is not defined                                                    no-undef
+  Line 40:1:  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+  Line 40:1:  'F' is not defined                                                     no-undef
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/App.tsx
+  Line 285:10:  'accessKey' is assigned a value but never used          @typescript-eslint/no-unused-vars
+  Line 285:21:  'setAccessKey' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  Line 286:10:  'creditInfo' is assigned a value but never used         @typescript-eslint/no-unused-vars
+  Line 287:10:  'isValidatingKey' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 288:10:  'keyError' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  Line 390:9:   'validateAccessKey' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src/services/apiService.js
+  Line 38:1:  Assign instance to a variable before exporting as module default  import/no-anonymous-default-export
+
+ERROR in [eslint] 
+src/services/apiService.js
+  Line 39:1:  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+  Line 39:1:  'EO' is not defined                                                    no-undef
+  Line 40:1:  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+  Line 40:1:  'F' is not defined                                                     no-undef
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
+ERROR in src/App.tsx:390:36
+TS7006: Parameter 'key' implicitly has an 'any' type.
+    388 |
+    389 |   // Validate access key and get credit info
+  > 390 |   const validateAccessKey = async (key) => {
+        |                                    ^^^
+    391 |     if (!key.trim()) {
+    392 |       setKeyError("Please enter an access key");
+    393 |       setCreditInfo(null);
+
+ERROR in src/App.tsx:407:19
+TS18046: 'error' is of type 'unknown'.
+    405 |     } catch (error) {
+    406 |       console.error('Access key validation failed:', error);
+  > 407 |       setKeyError(error.response?.data?.error || "Invalid access key");
+        |                   ^^^^^
+    408 |       setCreditInfo(null);
+    409 |       return false;
+    410 |     } finally {
+
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/services/apiService.js
+  Line 39:1:  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+  Line 39:1:  'EO' is not defined                                                    no-undef
+  Line 40:1:  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+  Line 40:1:  'F' is not defined                                                     no-undef
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/services/apiService.js
+  Line 38:1:  Assign instance to a variable before exporting as module default  import/no-anonymous-default-export
+
+ERROR in [eslint] 
+src/services/apiService.js
+  Line 39:1:  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+  Line 39:1:  'EO' is not defined                                                    no-undef
+  Line 40:1:  Expected an assignment or function call and instead saw an expression  no-unused-expressions
+  Line 40:1:  'F' is not defined                                                     no-undef
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/App.tsx:390:36
+TS7006: Parameter 'key' implicitly has an 'any' type.
+    388 |
+    389 |   // Validate access key and get credit info
+  > 390 |   const validateAccessKey = async (key) => {
+        |                                    ^^^
+    391 |     if (!key.trim()) {
+    392 |       setKeyError("Please enter an access key");
+    393 |       setCreditInfo(null);
+
+ERROR in src/App.tsx:407:19
+TS18046: 'error' is of type 'unknown'.
+    405 |     } catch (error) {
+    406 |       console.error('Access key validation failed:', error);
+  > 407 |       setKeyError(error.response?.data?.error || "Invalid access key");
+        |                   ^^^^^
+    408 |       setCreditInfo(null);
+    409 |       return false;
+    410 |     } finally {
+
+ERROR in src/App.tsx:721:35
+TS2339: Property 'plan' does not exist on type 'never'.
+    719 |             }}>
+    720 |               <p style={{ margin: '0 0 5px', fontWeight: '500' }}>
+  > 721 |                 Plan: {creditInfo.plan.charAt(0).toUpperCase() + creditInfo.plan.slice(1)}
+        |                                   ^^^^
+    722 |               </p>
+    723 |               <p style={{ margin: '0', color: 'var(--accent)' }}>
+    724 |                 Credits: {creditInfo.creditsRemaining} / {creditInfo.creditsTotal}
+
+ERROR in src/App.tsx:721:77
+TS2339: Property 'plan' does not exist on type 'never'.
+    719 |             }}>
+    720 |               <p style={{ margin: '0 0 5px', fontWeight: '500' }}>
+  > 721 |                 Plan: {creditInfo.plan.charAt(0).toUpperCase() + creditInfo.plan.slice(1)}
+        |                                                                             ^^^^
+    722 |               </p>
+    723 |               <p style={{ margin: '0', color: 'var(--accent)' }}>
+    724 |                 Credits: {creditInfo.creditsRemaining} / {creditInfo.creditsTotal}
+
+ERROR in src/App.tsx:724:38
+TS2339: Property 'creditsRemaining' does not exist on type 'never'.
+    722 |               </p>
+    723 |               <p style={{ margin: '0', color: 'var(--accent)' }}>
+  > 724 |                 Credits: {creditInfo.creditsRemaining} / {creditInfo.creditsTotal}
+        |                                      ^^^^^^^^^^^^^^^^
+    725 |               </p>
+    726 |             </div>
+    727 |           )}
+
+ERROR in src/App.tsx:724:70
+TS2339: Property 'creditsTotal' does not exist on type 'never'.
+    722 |               </p>
+    723 |               <p style={{ margin: '0', color: 'var(--accent)' }}>
+  > 724 |                 Credits: {creditInfo.creditsRemaining} / {creditInfo.creditsTotal}
+        |                                                                      ^^^^^^^^^^^^
+    725 |               </p>
+    726 |             </div>
+    727 |           )}
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/App.tsx:390:36
+TS7006: Parameter 'key' implicitly has an 'any' type.
+    388 |
+    389 |   // Validate access key and get credit info
+  > 390 |   const validateAccessKey = async (key) => {
+        |                                    ^^^
+    391 |     if (!key.trim()) {
+    392 |       setKeyError("Please enter an access key");
+    393 |       setCreditInfo(null);
+
+ERROR in src/App.tsx:407:19
+TS18046: 'error' is of type 'unknown'.
+    405 |     } catch (error) {
+    406 |       console.error('Access key validation failed:', error);
+  > 407 |       setKeyError(error.response?.data?.error || "Invalid access key");
+        |                   ^^^^^
+    408 |       setCreditInfo(null);
+    409 |       return false;
+    410 |     } finally {
+
+ERROR in src/App.tsx:721:35
+TS2339: Property 'plan' does not exist on type 'never'.
+    719 |             }}>
+    720 |               <p style={{ margin: '0 0 5px', fontWeight: '500' }}>
+  > 721 |                 Plan: {creditInfo.plan.charAt(0).toUpperCase() + creditInfo.plan.slice(1)}
+        |                                   ^^^^
+    722 |               </p>
+    723 |               <p style={{ margin: '0', color: 'var(--accent)' }}>
+    724 |                 Credits: {creditInfo.creditsRemaining} / {creditInfo.creditsTotal}
+
+ERROR in src/App.tsx:721:77
+TS2339: Property 'plan' does not exist on type 'never'.
+    719 |             }}>
+    720 |               <p style={{ margin: '0 0 5px', fontWeight: '500' }}>
+  > 721 |                 Plan: {creditInfo.plan.charAt(0).toUpperCase() + creditInfo.plan.slice(1)}
+        |                                                                             ^^^^
+    722 |               </p>
+    723 |               <p style={{ margin: '0', color: 'var(--accent)' }}>
+    724 |                 Credits: {creditInfo.creditsRemaining} / {creditInfo.creditsTotal}
+
+ERROR in src/App.tsx:724:38
+TS2339: Property 'creditsRemaining' does not exist on type 'never'.
+    722 |               </p>
+    723 |               <p style={{ margin: '0', color: 'var(--accent)' }}>
+  > 724 |                 Credits: {creditInfo.creditsRemaining} / {creditInfo.creditsTotal}
+        |                                      ^^^^^^^^^^^^^^^^
+    725 |               </p>
+    726 |             </div>
+    727 |           )}
+
+ERROR in src/App.tsx:724:70
+TS2339: Property 'creditsTotal' does not exist on type 'never'.
+    722 |               </p>
+    723 |               <p style={{ margin: '0', color: 'var(--accent)' }}>
+  > 724 |                 Credits: {creditInfo.creditsRemaining} / {creditInfo.creditsTotal}
+        |                                                                      ^^^^^^^^^^^^
+    725 |               </p>
+    726 |             </div>
+    727 |           )}
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/App.tsx:407:19
+TS18046: 'error' is of type 'unknown'.
+    405 |     } catch (error) {
+    406 |       console.error('Access key validation failed:', error);
+  > 407 |       setKeyError(error.response?.data?.error || "Invalid access key");
+        |                   ^^^^^
+    408 |       setCreditInfo(null);
+    409 |       return false;
+    410 |     } finally {
+
+ERROR in src/App.tsx:721:35
+TS2339: Property 'plan' does not exist on type 'never'.
+    719 |             }}>
+    720 |               <p style={{ margin: '0 0 5px', fontWeight: '500' }}>
+  > 721 |                 Plan: {creditInfo.plan.charAt(0).toUpperCase() + creditInfo.plan.slice(1)}
+        |                                   ^^^^
+    722 |               </p>
+    723 |               <p style={{ margin: '0', color: 'var(--accent)' }}>
+    724 |                 Credits: {creditInfo.creditsRemaining} / {creditInfo.creditsTotal}
+
+ERROR in src/App.tsx:721:77
+TS2339: Property 'plan' does not exist on type 'never'.
+    719 |             }}>
+    720 |               <p style={{ margin: '0 0 5px', fontWeight: '500' }}>
+  > 721 |                 Plan: {creditInfo.plan.charAt(0).toUpperCase() + creditInfo.plan.slice(1)}
+        |                                                                             ^^^^
+    722 |               </p>
+    723 |               <p style={{ margin: '0', color: 'var(--accent)' }}>
+    724 |                 Credits: {creditInfo.creditsRemaining} / {creditInfo.creditsTotal}
+
+ERROR in src/App.tsx:724:38
+TS2339: Property 'creditsRemaining' does not exist on type 'never'.
+    722 |               </p>
+    723 |               <p style={{ margin: '0', color: 'var(--accent)' }}>
+  > 724 |                 Credits: {creditInfo.creditsRemaining} / {creditInfo.creditsTotal}
+        |                                      ^^^^^^^^^^^^^^^^
+    725 |               </p>
+    726 |             </div>
+    727 |           )}
+
+ERROR in src/App.tsx:724:70
+TS2339: Property 'creditsTotal' does not exist on type 'never'.
+    722 |               </p>
+    723 |               <p style={{ margin: '0', color: 'var(--accent)' }}>
+  > 724 |                 Credits: {creditInfo.creditsRemaining} / {creditInfo.creditsTotal}
+        |                                                                      ^^^^^^^^^^^^
+    725 |               </p>
+    726 |             </div>
+    727 |           )}
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/App.tsx:286:48
+TS2304: Cannot find name 'CreditInfo'.
+    284 |   // Credit system state
+    285 |   const [accessKey, setAccessKey] = useState("");
+  > 286 |   const [creditInfo, setCreditInfo] = useState<CreditInfo | null>(null);
+        |                                                ^^^^^^^^^^
+    287 |   const [isValidatingKey, setIsValidatingKey] = useState(false);
+    288 |   const [keyError, setKeyError] = useState("");
+    289 |   const [convertingArticleId, setConvertingArticleId] = useState<string | null>(null);
+
+ERROR in src/App.tsx:407:19
+TS18046: 'error' is of type 'unknown'.
+    405 |     } catch (error) {
+    406 |       console.error('Access key validation failed:', error);
+  > 407 |       setKeyError(error.response?.data?.error || "Invalid access key");
+        |                   ^^^^^
+    408 |       setCreditInfo(null);
+    409 |       return false;
+    410 |     } finally {
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/App.tsx:286:48
+TS2304: Cannot find name 'CreditInfo'.
+    284 |   // Credit system state
+    285 |   const [accessKey, setAccessKey] = useState("");
+  > 286 |   const [creditInfo, setCreditInfo] = useState<CreditInfo | null>(null);
+        |                                                ^^^^^^^^^^
+    287 |   const [isValidatingKey, setIsValidatingKey] = useState(false);
+    288 |   const [keyError, setKeyError] = useState("");
+    289 |   const [convertingArticleId, setConvertingArticleId] = useState<string | null>(null);
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/App.tsx
+Syntax error: Unexpected token. Did you mean `{'}'}` or `&rbrace;`? (672:11)
+ERROR in ./src/App.tsx
+Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: /Users/eriskin/keyword-alchemist/src/App.tsx: Unexpected token, expected "," (797:6)
+
+  795 |       </div>
+  796 |       
+> 797 |       {/* Main Content */}
+      |       ^
+  798 |       <div className="main-content">
+  799 |         <div className="main-header">
+  800 |           <div className="nav-buttons">
+    at constructor (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:367:19)
+    at TypeScriptParserMixin.raise (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6627:19)
+    at TypeScriptParserMixin.unexpected (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6647:16)
+    at TypeScriptParserMixin.expect (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6927:12)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11660:14)
+    at TypeScriptParserMixin.parseExprAtom (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11326:23)
+    at TypeScriptParserMixin.parseExprAtom (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4794:20)
+    at TypeScriptParserMixin.parseExprSubscripts (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11076:23)
+    at TypeScriptParserMixin.parseUpdate (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11061:21)
+    at TypeScriptParserMixin.parseMaybeUnary (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11041:23)
+    at TypeScriptParserMixin.parseMaybeUnary (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9852:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10894:61)
+    at TypeScriptParserMixin.parseExprOps (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10899:23)
+    at TypeScriptParserMixin.parseMaybeConditional (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10876:23)
+    at TypeScriptParserMixin.parseMaybeAssign (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10826:21)
+    at TypeScriptParserMixin.parseMaybeAssign (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9801:20)
+    at TypeScriptParserMixin.parseExpressionBase (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10779:23)
+    at /Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10775:39
+    at TypeScriptParserMixin.allowInAnd (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12422:16)
+    at TypeScriptParserMixin.parseExpression (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10775:17)
+    at TypeScriptParserMixin.parseReturnStatement (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13142:28)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12798:21)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9527:18)
+    at TypeScriptParserMixin.parseStatementLike (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12767:17)
+    at TypeScriptParserMixin.parseStatementListItem (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12747:17)
+    at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13316:61)
+    at TypeScriptParserMixin.parseBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13309:10)
+    at TypeScriptParserMixin.parseBlock (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13297:10)
+    at TypeScriptParserMixin.parseFunctionBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12101:24)
+    at TypeScriptParserMixin.parseFunctionBodyAndFinish (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12087:10)
+    at TypeScriptParserMixin.parseFunctionBodyAndFinish (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9248:18)
+    at /Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13445:12
+    at TypeScriptParserMixin.withSmartMixTopicForbiddingContext (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12404:14)
+    at TypeScriptParserMixin.parseFunction (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13444:10)
+    at TypeScriptParserMixin.parseFunctionStatement (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13125:17)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12791:21)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9527:18)
+    at TypeScriptParserMixin.parseStatementLike (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12767:17)
+    at TypeScriptParserMixin.parseModuleItem (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12744:17)
+    at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13316:36)
+    at TypeScriptParserMixin.parseBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13309:10)
+    at TypeScriptParserMixin.parseProgram (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12625:10)
+    at TypeScriptParserMixin.parseTopLevel (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12615:25)
+    at TypeScriptParserMixin.parse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:14492:10)
+    at TypeScriptParserMixin.parse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10144:18)
+    at parse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:14526:38)
+    at parser (/Users/eriskin/keyword-alchemist/node_modules/@babel/core/lib/parser/index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (/Users/eriskin/keyword-alchemist/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+
+ERROR in [eslint] 
+src/App.tsx
+  Line 672:11:  Parsing error: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+
+webpack compiled with 2 errors
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/App.tsx:672:12
+TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    670 |           </button>
+    671 |
+  > 672 |           )}
+        |            ^
+    673 |         </div>
+    674 |         </div>
+    675 |         
+
+ERROR in src/App.tsx:797:7
+TS1005: ')' expected.
+    795 |       </div>
+    796 |       
+  > 797 |       {/* Main Content */}
+        |       ^
+    798 |       <div className="main-content">
+    799 |         <div className="main-header">
+    800 |           <div className="nav-buttons">
+
+ERROR in src/App.tsx:957:5
+TS1128: Declaration or statement expected.
+    955 |         </div>
+    956 |       </div>
+  > 957 |     </div>
+        |     ^^
+    958 |   );
+    959 | }
+    960 |
+
+ERROR in src/App.tsx:957:7
+TS2304: Cannot find name 'div'.
+    955 |         </div>
+    956 |       </div>
+  > 957 |     </div>
+        |       ^^^
+    958 |   );
+    959 | }
+    960 |
+
+ERROR in src/App.tsx:958:3
+TS1109: Expression expected.
+    956 |       </div>
+    957 |     </div>
+  > 958 |   );
+        |   ^
+    959 | }
+    960 |
+    961 | export default App;
+
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/App.tsx
+Syntax error: Unexpected token. Did you mean `{'}'}` or `&rbrace;`? (672:11)
+ERROR in ./src/App.tsx
+Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: /Users/eriskin/keyword-alchemist/src/App.tsx: Unexpected token, expected "," (844:6)
+
+  842 |       </div>
+  843 |       
+> 844 |       {/* Main Content */}
+      |       ^
+  845 |       <div className="main-content">
+  846 |         <div className="main-header">
+  847 |           <div className="nav-buttons">
+    at constructor (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:367:19)
+    at TypeScriptParserMixin.raise (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6627:19)
+    at TypeScriptParserMixin.unexpected (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6647:16)
+    at TypeScriptParserMixin.expect (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6927:12)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11660:14)
+    at TypeScriptParserMixin.parseExprAtom (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11326:23)
+    at TypeScriptParserMixin.parseExprAtom (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4794:20)
+    at TypeScriptParserMixin.parseExprSubscripts (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11076:23)
+    at TypeScriptParserMixin.parseUpdate (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11061:21)
+    at TypeScriptParserMixin.parseMaybeUnary (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11041:23)
+    at TypeScriptParserMixin.parseMaybeUnary (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9852:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10894:61)
+    at TypeScriptParserMixin.parseExprOps (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10899:23)
+    at TypeScriptParserMixin.parseMaybeConditional (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10876:23)
+    at TypeScriptParserMixin.parseMaybeAssign (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10826:21)
+    at TypeScriptParserMixin.parseMaybeAssign (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9801:20)
+    at TypeScriptParserMixin.parseExpressionBase (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10779:23)
+    at /Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10775:39
+    at TypeScriptParserMixin.allowInAnd (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12422:16)
+    at TypeScriptParserMixin.parseExpression (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10775:17)
+    at TypeScriptParserMixin.parseReturnStatement (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13142:28)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12798:21)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9527:18)
+    at TypeScriptParserMixin.parseStatementLike (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12767:17)
+    at TypeScriptParserMixin.parseStatementListItem (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12747:17)
+    at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13316:61)
+    at TypeScriptParserMixin.parseBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13309:10)
+    at TypeScriptParserMixin.parseBlock (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13297:10)
+    at TypeScriptParserMixin.parseFunctionBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12101:24)
+    at TypeScriptParserMixin.parseFunctionBodyAndFinish (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12087:10)
+    at TypeScriptParserMixin.parseFunctionBodyAndFinish (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9248:18)
+    at /Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13445:12
+    at TypeScriptParserMixin.withSmartMixTopicForbiddingContext (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12404:14)
+    at TypeScriptParserMixin.parseFunction (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13444:10)
+    at TypeScriptParserMixin.parseFunctionStatement (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13125:17)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12791:21)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9527:18)
+    at TypeScriptParserMixin.parseStatementLike (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12767:17)
+    at TypeScriptParserMixin.parseModuleItem (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12744:17)
+    at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13316:36)
+    at TypeScriptParserMixin.parseBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13309:10)
+    at TypeScriptParserMixin.parseProgram (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12625:10)
+    at TypeScriptParserMixin.parseTopLevel (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12615:25)
+    at TypeScriptParserMixin.parse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:14492:10)
+    at TypeScriptParserMixin.parse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10144:18)
+    at parse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:14526:38)
+    at parser (/Users/eriskin/keyword-alchemist/node_modules/@babel/core/lib/parser/index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (/Users/eriskin/keyword-alchemist/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+
+ERROR in [eslint] 
+src/App.tsx
+  Line 672:11:  Parsing error: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+
+webpack compiled with 2 errors
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/App.tsx:672:12
+TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    670 |           </button>
+    671 |
+  > 672 |           )}
+        |            ^
+    673 |         </div>
+    674 |         </div>
+    675 |         
+
+ERROR in src/App.tsx:844:7
+TS1005: ')' expected.
+    842 |       </div>
+    843 |       
+  > 844 |       {/* Main Content */}
+        |       ^
+    845 |       <div className="main-content">
+    846 |         <div className="main-header">
+    847 |           <div className="nav-buttons">
+
+ERROR in src/App.tsx:1004:5
+TS1128: Declaration or statement expected.
+    1002 |         </div>
+    1003 |       </div>
+  > 1004 |     </div>
+         |     ^^
+    1005 |   );
+    1006 | }
+    1007 |
+
+ERROR in src/App.tsx:1004:7
+TS2304: Cannot find name 'div'.
+    1002 |         </div>
+    1003 |       </div>
+  > 1004 |     </div>
+         |       ^^^
+    1005 |   );
+    1006 | }
+    1007 |
+
+ERROR in src/App.tsx:1005:3
+TS1109: Expression expected.
+    1003 |       </div>
+    1004 |     </div>
+  > 1005 |   );
+         |   ^
+    1006 | }
+    1007 |
+    1008 | export default App;
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.tsx
+  Line 1:8:  'apiService' is defined but never used  @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.tsx
+  Line 1:8:  'apiService' is defined but never used  @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.tsx
+  Line 1:8:   'apiService' is defined but never used  @typescript-eslint/no-unused-vars
+  Line 5:48:  'CreditInfo' is defined but never used  @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.tsx
+  Line 1:8:   'apiService' is defined but never used  @typescript-eslint/no-unused-vars
+  Line 5:48:  'CreditInfo' is defined but never used  @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.tsx
+  Line 1:8:     'apiService' is defined but never used                   @typescript-eslint/no-unused-vars
+  Line 285:10:  'accessKey' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  Line 285:21:  'setAccessKey' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 286:10:  'creditInfo' is assigned a value but never used          @typescript-eslint/no-unused-vars
+  Line 286:22:  'setCreditInfo' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  Line 287:10:  'isValidatingKey' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 287:27:  'setIsValidatingKey' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 288:10:  'keyError' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  Line 288:20:  'setKeyError' is assigned a value but never used         @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.tsx
+  Line 1:8:     'apiService' is defined but never used                   @typescript-eslint/no-unused-vars
+  Line 285:10:  'accessKey' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  Line 285:21:  'setAccessKey' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 286:10:  'creditInfo' is assigned a value but never used          @typescript-eslint/no-unused-vars
+  Line 286:22:  'setCreditInfo' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  Line 287:10:  'isValidatingKey' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 287:27:  'setIsValidatingKey' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 288:10:  'keyError' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  Line 288:20:  'setKeyError' is assigned a value but never used         @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.tsx
+  Line 1:8:     'apiService' is defined but never used                   @typescript-eslint/no-unused-vars
+  Line 286:22:  'setCreditInfo' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  Line 287:27:  'setIsValidatingKey' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 288:20:  'setKeyError' is assigned a value but never used         @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.tsx
+  Line 1:8:     'apiService' is defined but never used                   @typescript-eslint/no-unused-vars
+  Line 286:22:  'setCreditInfo' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  Line 287:27:  'setIsValidatingKey' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 288:20:  'setKeyError' is assigned a value but never used         @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/App.tsx:683:28
+TS2304: Cannot find name 'validateAccessKey'.
+    681 |           />
+    682 |           <button
+  > 683 |             onClick={() => validateAccessKey(accessKey)}
+        |                            ^^^^^^^^^^^^^^^^^
+    684 |             disabled={isValidatingKey || !accessKey.trim()}
+    685 |             className="generate-button"
+    686 |             style={{
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/App.tsx
+Syntax error: ')' expected (797:6)
+ERROR in ./src/App.tsx
+Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: /Users/eriskin/keyword-alchemist/src/App.tsx: Unexpected token, expected "," (797:6)
+
+  795 |       </div>
+  796 |       
+> 797 |       {/* Main Content */}
+      |       ^
+  798 |       <div className="main-content">
+  799 |         <div className="main-header">
+  800 |           <div className="nav-buttons">
+    at constructor (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:367:19)
+    at TypeScriptParserMixin.raise (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6627:19)
+    at TypeScriptParserMixin.unexpected (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6647:16)
+    at TypeScriptParserMixin.expect (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6927:12)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11660:14)
+    at TypeScriptParserMixin.parseExprAtom (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11326:23)
+    at TypeScriptParserMixin.parseExprAtom (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4794:20)
+    at TypeScriptParserMixin.parseExprSubscripts (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11076:23)
+    at TypeScriptParserMixin.parseUpdate (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11061:21)
+    at TypeScriptParserMixin.parseMaybeUnary (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11041:23)
+    at TypeScriptParserMixin.parseMaybeUnary (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9852:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10894:61)
+    at TypeScriptParserMixin.parseExprOps (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10899:23)
+    at TypeScriptParserMixin.parseMaybeConditional (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10876:23)
+    at TypeScriptParserMixin.parseMaybeAssign (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10826:21)
+    at TypeScriptParserMixin.parseMaybeAssign (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9801:20)
+    at TypeScriptParserMixin.parseExpressionBase (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10779:23)
+    at /Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10775:39
+    at TypeScriptParserMixin.allowInAnd (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12422:16)
+    at TypeScriptParserMixin.parseExpression (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10775:17)
+    at TypeScriptParserMixin.parseReturnStatement (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13142:28)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12798:21)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9527:18)
+    at TypeScriptParserMixin.parseStatementLike (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12767:17)
+    at TypeScriptParserMixin.parseStatementListItem (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12747:17)
+    at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13316:61)
+    at TypeScriptParserMixin.parseBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13309:10)
+    at TypeScriptParserMixin.parseBlock (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13297:10)
+    at TypeScriptParserMixin.parseFunctionBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12101:24)
+    at TypeScriptParserMixin.parseFunctionBodyAndFinish (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12087:10)
+    at TypeScriptParserMixin.parseFunctionBodyAndFinish (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9248:18)
+    at /Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13445:12
+    at TypeScriptParserMixin.withSmartMixTopicForbiddingContext (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12404:14)
+    at TypeScriptParserMixin.parseFunction (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13444:10)
+    at TypeScriptParserMixin.parseFunctionStatement (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13125:17)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12791:21)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9527:18)
+    at TypeScriptParserMixin.parseStatementLike (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12767:17)
+    at TypeScriptParserMixin.parseModuleItem (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12744:17)
+    at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13316:36)
+    at TypeScriptParserMixin.parseBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13309:10)
+    at TypeScriptParserMixin.parseProgram (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12625:10)
+    at TypeScriptParserMixin.parseTopLevel (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12615:25)
+    at TypeScriptParserMixin.parse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:14492:10)
+    at TypeScriptParserMixin.parse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10144:18)
+    at parse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:14526:38)
+    at parser (/Users/eriskin/keyword-alchemist/node_modules/@babel/core/lib/parser/index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (/Users/eriskin/keyword-alchemist/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+
+ERROR in [eslint] 
+src/App.tsx
+  Line 797:6:  Parsing error: ')' expected
+
+webpack compiled with 2 errors
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/App.tsx:797:7
+TS1005: ')' expected.
+    795 |       </div>
+    796 |       
+  > 797 |       {/* Main Content */}
+        |       ^
+    798 |       <div className="main-content">
+    799 |         <div className="main-header">
+    800 |           <div className="nav-buttons">
+
+ERROR in src/App.tsx:957:5
+TS1128: Declaration or statement expected.
+    955 |         </div>
+    956 |       </div>
+  > 957 |     </div>
+        |     ^^
+    958 |   );
+    959 | }
+    960 |
+
+ERROR in src/App.tsx:957:7
+TS2304: Cannot find name 'div'.
+    955 |         </div>
+    956 |       </div>
+  > 957 |     </div>
+        |       ^^^
+    958 |   );
+    959 | }
+    960 |
+
+ERROR in src/App.tsx:958:3
+TS1109: Expression expected.
+    956 |       </div>
+    957 |     </div>
+  > 958 |   );
+        |   ^
+    959 | }
+    960 |
+    961 | export default App;
+
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/App.tsx
+Syntax error: ')' expected (847:6)
+ERROR in ./src/App.tsx
+Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: /Users/eriskin/keyword-alchemist/src/App.tsx: Unexpected token, expected "," (847:6)
+
+  845 |       </div>
+  846 |       
+> 847 |       {/* Main Content */}
+      |       ^
+  848 |       <div className="main-content">
+  849 |         <div className="main-header">
+  850 |           <div className="nav-buttons">
+    at constructor (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:367:19)
+    at TypeScriptParserMixin.raise (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6627:19)
+    at TypeScriptParserMixin.unexpected (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6647:16)
+    at TypeScriptParserMixin.expect (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6927:12)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11660:14)
+    at TypeScriptParserMixin.parseExprAtom (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11326:23)
+    at TypeScriptParserMixin.parseExprAtom (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4794:20)
+    at TypeScriptParserMixin.parseExprSubscripts (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11076:23)
+    at TypeScriptParserMixin.parseUpdate (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11061:21)
+    at TypeScriptParserMixin.parseMaybeUnary (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11041:23)
+    at TypeScriptParserMixin.parseMaybeUnary (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9852:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10894:61)
+    at TypeScriptParserMixin.parseExprOps (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10899:23)
+    at TypeScriptParserMixin.parseMaybeConditional (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10876:23)
+    at TypeScriptParserMixin.parseMaybeAssign (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10826:21)
+    at TypeScriptParserMixin.parseMaybeAssign (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9801:20)
+    at TypeScriptParserMixin.parseExpressionBase (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10779:23)
+    at /Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10775:39
+    at TypeScriptParserMixin.allowInAnd (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12422:16)
+    at TypeScriptParserMixin.parseExpression (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10775:17)
+    at TypeScriptParserMixin.parseReturnStatement (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13142:28)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12798:21)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9527:18)
+    at TypeScriptParserMixin.parseStatementLike (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12767:17)
+    at TypeScriptParserMixin.parseStatementListItem (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12747:17)
+    at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13316:61)
+    at TypeScriptParserMixin.parseBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13309:10)
+    at TypeScriptParserMixin.parseBlock (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13297:10)
+    at TypeScriptParserMixin.parseFunctionBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12101:24)
+    at TypeScriptParserMixin.parseFunctionBodyAndFinish (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12087:10)
+    at TypeScriptParserMixin.parseFunctionBodyAndFinish (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9248:18)
+    at /Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13445:12
+    at TypeScriptParserMixin.withSmartMixTopicForbiddingContext (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12404:14)
+    at TypeScriptParserMixin.parseFunction (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13444:10)
+    at TypeScriptParserMixin.parseFunctionStatement (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13125:17)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12791:21)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9527:18)
+    at TypeScriptParserMixin.parseStatementLike (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12767:17)
+    at TypeScriptParserMixin.parseModuleItem (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12744:17)
+    at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13316:36)
+    at TypeScriptParserMixin.parseBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13309:10)
+    at TypeScriptParserMixin.parseProgram (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12625:10)
+    at TypeScriptParserMixin.parseTopLevel (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12615:25)
+    at TypeScriptParserMixin.parse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:14492:10)
+    at TypeScriptParserMixin.parse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10144:18)
+    at parse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:14526:38)
+    at parser (/Users/eriskin/keyword-alchemist/node_modules/@babel/core/lib/parser/index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (/Users/eriskin/keyword-alchemist/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+
+ERROR in [eslint] 
+src/App.tsx
+  Line 847:6:  Parsing error: ')' expected
+
+webpack compiled with 2 errors
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/App.tsx:847:7
+TS1005: ')' expected.
+    845 |       </div>
+    846 |       
+  > 847 |       {/* Main Content */}
+        |       ^
+    848 |       <div className="main-content">
+    849 |         <div className="main-header">
+    850 |           <div className="nav-buttons">
+
+ERROR in src/App.tsx:1007:5
+TS1128: Declaration or statement expected.
+    1005 |         </div>
+    1006 |       </div>
+  > 1007 |     </div>
+         |     ^^
+    1008 |   );
+    1009 | }
+    1010 |
+
+ERROR in src/App.tsx:1007:7
+TS2304: Cannot find name 'div'.
+    1005 |         </div>
+    1006 |       </div>
+  > 1007 |     </div>
+         |       ^^^
+    1008 |   );
+    1009 | }
+    1010 |
+
+ERROR in src/App.tsx:1008:3
+TS1109: Expression expected.
+    1006 |       </div>
+    1007 |     </div>
+  > 1008 |   );
+         |   ^
+    1009 | }
+    1010 |
+    1011 | export default App;
+
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/App.tsx
+Syntax error: ')' expected (847:6)
+ERROR in ./src/App.tsx
+Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: /Users/eriskin/keyword-alchemist/src/App.tsx: Unexpected token, expected "," (847:6)
+
+  845 |       </div>
+  846 |       
+> 847 |       {/* Main Content */}
+      |       ^
+  848 |       <div className="main-content">
+  849 |         <div className="main-header">
+  850 |           <div className="nav-buttons">
+    at constructor (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:367:19)
+    at TypeScriptParserMixin.raise (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6627:19)
+    at TypeScriptParserMixin.unexpected (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6647:16)
+    at TypeScriptParserMixin.expect (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:6927:12)
+    at TypeScriptParserMixin.parseParenAndDistinguishExpression (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11660:14)
+    at TypeScriptParserMixin.parseExprAtom (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11326:23)
+    at TypeScriptParserMixin.parseExprAtom (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:4794:20)
+    at TypeScriptParserMixin.parseExprSubscripts (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11076:23)
+    at TypeScriptParserMixin.parseUpdate (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11061:21)
+    at TypeScriptParserMixin.parseMaybeUnary (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:11041:23)
+    at TypeScriptParserMixin.parseMaybeUnary (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9852:18)
+    at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10894:61)
+    at TypeScriptParserMixin.parseExprOps (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10899:23)
+    at TypeScriptParserMixin.parseMaybeConditional (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10876:23)
+    at TypeScriptParserMixin.parseMaybeAssign (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10826:21)
+    at TypeScriptParserMixin.parseMaybeAssign (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9801:20)
+    at TypeScriptParserMixin.parseExpressionBase (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10779:23)
+    at /Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10775:39
+    at TypeScriptParserMixin.allowInAnd (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12422:16)
+    at TypeScriptParserMixin.parseExpression (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10775:17)
+    at TypeScriptParserMixin.parseReturnStatement (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13142:28)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12798:21)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9527:18)
+    at TypeScriptParserMixin.parseStatementLike (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12767:17)
+    at TypeScriptParserMixin.parseStatementListItem (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12747:17)
+    at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13316:61)
+    at TypeScriptParserMixin.parseBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13309:10)
+    at TypeScriptParserMixin.parseBlock (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13297:10)
+    at TypeScriptParserMixin.parseFunctionBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12101:24)
+    at TypeScriptParserMixin.parseFunctionBodyAndFinish (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12087:10)
+    at TypeScriptParserMixin.parseFunctionBodyAndFinish (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9248:18)
+    at /Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13445:12
+    at TypeScriptParserMixin.withSmartMixTopicForbiddingContext (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12404:14)
+    at TypeScriptParserMixin.parseFunction (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13444:10)
+    at TypeScriptParserMixin.parseFunctionStatement (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13125:17)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12791:21)
+    at TypeScriptParserMixin.parseStatementContent (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:9527:18)
+    at TypeScriptParserMixin.parseStatementLike (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12767:17)
+    at TypeScriptParserMixin.parseModuleItem (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12744:17)
+    at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13316:36)
+    at TypeScriptParserMixin.parseBlockBody (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:13309:10)
+    at TypeScriptParserMixin.parseProgram (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12625:10)
+    at TypeScriptParserMixin.parseTopLevel (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:12615:25)
+    at TypeScriptParserMixin.parse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:14492:10)
+    at TypeScriptParserMixin.parse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:10144:18)
+    at parse (/Users/eriskin/keyword-alchemist/node_modules/@babel/parser/lib/index.js:14526:38)
+    at parser (/Users/eriskin/keyword-alchemist/node_modules/@babel/core/lib/parser/index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (/Users/eriskin/keyword-alchemist/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+
+ERROR in [eslint] 
+src/App.tsx
+  Line 847:6:  Parsing error: ')' expected
+
+webpack compiled with 2 errors
+ERROR in src/App.tsx:847:7
+TS1005: ')' expected.
+    845 |       </div>
+    846 |       
+  > 847 |       {/* Main Content */}
+        |       ^
+    848 |       <div className="main-content">
+    849 |         <div className="main-header">
+    850 |           <div className="nav-buttons">
+
+ERROR in src/App.tsx:1007:5
+TS1128: Declaration or statement expected.
+    1005 |         </div>
+    1006 |       </div>
+  > 1007 |     </div>
+         |     ^^
+    1008 |   );
+    1009 | }
+    1010 |
+
+ERROR in src/App.tsx:1007:7
+TS2304: Cannot find name 'div'.
+    1005 |         </div>
+    1006 |       </div>
+  > 1007 |     </div>
+         |       ^^^
+    1008 |   );
+    1009 | }
+    1010 |
+
+ERROR in src/App.tsx:1008:3
+TS1109: Expression expected.
+    1006 |       </div>
+    1007 |     </div>
+  > 1008 |   );
+         |   ^
+    1009 | }
+    1010 |
+    1011 | export default App;
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.tsx
+  Line 1:8:  'apiService' is defined but never used  @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.tsx
+  Line 1:8:  'apiService' is defined but never used  @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.tsx
+  Line 1:8:   'apiService' is defined but never used  @typescript-eslint/no-unused-vars
+  Line 5:48:  'CreditInfo' is defined but never used  @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.tsx
+  Line 1:8:   'apiService' is defined but never used  @typescript-eslint/no-unused-vars
+  Line 5:48:  'CreditInfo' is defined but never used  @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.tsx
+  Line 1:8:     'apiService' is defined but never used                   @typescript-eslint/no-unused-vars
+  Line 285:10:  'accessKey' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  Line 285:21:  'setAccessKey' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 286:10:  'creditInfo' is assigned a value but never used          @typescript-eslint/no-unused-vars
+  Line 286:22:  'setCreditInfo' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  Line 287:10:  'isValidatingKey' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 287:27:  'setIsValidatingKey' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 288:10:  'keyError' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  Line 288:20:  'setKeyError' is assigned a value but never used         @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.tsx
+  Line 1:8:     'apiService' is defined but never used                   @typescript-eslint/no-unused-vars
+  Line 285:10:  'accessKey' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  Line 285:21:  'setAccessKey' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  Line 286:10:  'creditInfo' is assigned a value but never used          @typescript-eslint/no-unused-vars
+  Line 286:22:  'setCreditInfo' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  Line 287:10:  'isValidatingKey' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 287:27:  'setIsValidatingKey' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 288:10:  'keyError' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  Line 288:20:  'setKeyError' is assigned a value but never used         @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.tsx
+  Line 285:10:  'accessKey' is assigned a value but never used          @typescript-eslint/no-unused-vars
+  Line 285:21:  'setAccessKey' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  Line 286:10:  'creditInfo' is assigned a value but never used         @typescript-eslint/no-unused-vars
+  Line 287:10:  'isValidatingKey' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 288:10:  'keyError' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  Line 359:9:   'validateAccessKey' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.tsx
+  Line 285:10:  'accessKey' is assigned a value but never used          @typescript-eslint/no-unused-vars
+  Line 285:21:  'setAccessKey' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  Line 286:10:  'creditInfo' is assigned a value but never used         @typescript-eslint/no-unused-vars
+  Line 287:10:  'isValidatingKey' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  Line 288:10:  'keyError' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  Line 359:9:   'validateAccessKey' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/App.tsx
+  Line 287:10:  'isValidatingKey' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 288:10:  'keyError' is assigned a value but never used         @typescript-eslint/no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/App.tsx
+  Line 287:10:  'isValidatingKey' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 288:10:  'keyError' is assigned a value but never used         @typescript-eslint/no-unused-vars
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.

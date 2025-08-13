@@ -31,3 +31,22 @@ export interface BlogPostResponse {
 export type Theme = 'light' | 'dark';
 
 export type CurrentView = 'articles' | 'pricing';
+
+// Credit system types
+export interface CreditInfo {
+  valid: boolean;
+  plan: string;
+  creditsTotal: number;
+  creditsUsed: number;
+  creditsRemaining: number;
+  status: string;
+}
+
+export interface ProcessResponse {
+  success: boolean;
+  message: string;
+  creditsRemaining: number;
+  keywordsToProcess?: string[];
+  allowedKeywords?: string[];
+  rejectedKeywords?: string[];
+}

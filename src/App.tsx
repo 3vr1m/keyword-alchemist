@@ -1,7 +1,8 @@
+import apiService from './services/apiService';
 import React, { useState, useEffect, useRef } from 'react';
 import { Upload, Sparkles, FileText, DollarSign, Moon, Sun, Copy, CheckCircle, Menu, X } from 'lucide-react';
 import './App.css';
-import { Keyword, Article, Theme, CurrentView } from './types';
+import { Keyword, Article, Theme, CurrentView, CreditInfo } from './types';
 import { parseKeywordsFromFile, generateUniqueId, copyToClipboard, formatContent, readFileAsText, validateFileType } from './utils/fileUtils';
 import { markdownToHtml, getWordCount } from './utils/markdownUtils';
 import geminiService from './services/geminiService';
@@ -279,6 +280,12 @@ function App() {
   const [dragOver, setDragOver] = useState(false);
   const [copiedArticleId, setCopiedArticleId] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Credit system state
+  const [accessKey, setAccessKey] = useState("");
+  const [creditInfo, setCreditInfo] = useState<CreditInfo | null>(null);
+  const [isValidatingKey, setIsValidatingKey] = useState(false);
+  const [keyError, setKeyError] = useState("");
   const [outputFormat, setOutputFormat] = useState<string>('wordpress');
   const [convertingArticleId, setConvertingArticleId] = useState<string | null>(null);
   
@@ -345,6 +352,32 @@ function App() {
     } catch (error) {
       alert('Error reading file. Please try again.');
       console.error('File upload error:', error);
+    }
+  };
+
+  // Validate access key and get credit info
+  const validateAccessKey = async (key: string) => {
+    if (!key.trim()) {
+      setKeyError("Please enter an access key");
+      setCreditInfo(null);
+      return false;
+    }
+
+    setIsValidatingKey(true);
+    setKeyError("");
+
+    try {
+      const response = await apiService.validateAccessKey(key.trim());
+      setCreditInfo(response);
+      setKeyError("");
+      return true;
+    } catch (error: any) {
+      console.error('Access key validation failed:', error);
+      setKeyError(error.response?.data?.error || "Invalid access key");
+      setCreditInfo(null);
+      return false;
+    } finally {
+      setIsValidatingKey(false);
     }
   };
 
@@ -662,6 +695,23 @@ function App() {
           </div>
         </div>
         
+
+        <div className="upload-section">
+          <h3 className="section-title">🔑 Access Key</h3>
+          <input
+            type="text"
+            value={accessKey}
+            onChange={(e) => setAccessKey(e.target.value)}
+            placeholder="Enter access key (e.g., KWA-XXXXXX)"
+            className="format-select"
+          />
+          <button onClick={() => validateAccessKey(accessKey)}  style={{ marginTop: '8px', padding: '8px', width: 'auto', display: 'inline-block', fontSize: '13px' }}>
+            {isValidatingKey ? 'Validating...' : 'Validate Key'}
+          </button>
+          {keyError && <p style={{ color: 'red', fontSize: '12px', margin: '5px 0' }}>{keyError}</p>}
+          {creditInfo && <div style={{ fontSize: '12px', color: 'var(--accent)', marginTop: '5px' }}>{creditInfo.creditsRemaining}/{creditInfo.creditsTotal} credits</div>}
+        </div>
+
         <div className="upload-section">
           <div 
             className={`upload-area ${dragOver ? 'dragover' : ''}`}
