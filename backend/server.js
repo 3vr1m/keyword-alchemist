@@ -245,10 +245,24 @@ Output the result as a single, valid JSON object with the following structure:
 
   } catch (error) {
     console.error('Keyword processing error:', error);
+    
+    // Calculate remaining credits safely
+    let creditsRemaining = 0;
+    try {
+      if (typeof accessKey !== 'undefined') {
+        const keyDataForError = await database.getAccessKey(accessKey);
+        if (keyDataForError) {
+          creditsRemaining = keyDataForError.credits_total - keyDataForError.credits_used;
+        }
+      }
+    } catch (dbError) {
+      console.error('Error getting credits for error response:', dbError);
+    }
+    
     res.status(500).json({ 
       error: 'Failed to generate blog posts', 
       details: error.message,
-      creditsRemaining: keyData ? keyData.credits_total - keyData.credits_used : 0
+      creditsRemaining
     });
   }
 });
