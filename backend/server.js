@@ -13,7 +13,11 @@ const PORT = process.env.PORT || 3002;
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: [
+    process.env.FRONTEND_URL || 'http://localhost:3000',
+    'http://23.88.106.121:3001',
+    'http://localhost:3001'
+  ],
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
