@@ -30,7 +30,7 @@ export interface BlogPostResponse {
 
 export type Theme = 'light' | 'dark';
 
-export type CurrentView = 'articles' | 'pricing';
+export type CurrentView = 'articles' | 'pricing' | 'admin';
 
 // Credit system types
 export interface CreditInfo {
