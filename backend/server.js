@@ -150,11 +150,8 @@ Output the result as a single, valid JSON object with the following structure:
             // Parse the JSON response with robust error handling
             let cleanedText = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
             
-            // Additional cleaning for common AI formatting issues
+            // Fix smart quotes and apostrophes first
             cleanedText = cleanedText
-              .replace(/\n\s*\n/g, '\\n\\n') // Replace actual line breaks with escaped ones
-              .replace(/\n/g, '\\n') // Replace remaining newlines
-              .replace(/\t/g, '\\t') // Replace tabs
               .replace(/"/g, '"') // Fix smart quotes
               .replace(/"/g, '"') // Fix smart quotes
               .replace(/'/g, "'") // Fix smart apostrophes
@@ -165,9 +162,6 @@ Output the result as a single, valid JSON object with the following structure:
               const jsonMatch = text.match(/\{[\s\S]*\}/);
               if (jsonMatch) {
                 cleanedText = jsonMatch[0]
-                  .replace(/\n\s*\n/g, '\\n\\n')
-                  .replace(/\n/g, '\\n')
-                  .replace(/\t/g, '\\t')
                   .replace(/"/g, '"')
                   .replace(/"/g, '"')
                   .replace(/'/g, "'")
@@ -180,28 +174,31 @@ Output the result as a single, valid JSON object with the following structure:
               articleData = JSON.parse(cleanedText);
             } catch (parseError) {
               console.log(`[AI] First parse failed, attempting fallback parsing...`);
-              // Fallback: Try to extract JSON more aggressively
-              const fallbackMatch = text.match(/\{[\s\S]*?"body"\s*:\s*"[\s\S]*?"[\s\S]*?\}/);
-              if (fallbackMatch) {
-                let fallbackText = fallbackMatch[0]
-                  .replace(/\n/g, '\\n')
-                  .replace(/\r/g, '\\r')
-                  .replace(/\t/g, '\\t')
-                  .replace(/\\\"/g, '\"') // Fix over-escaped quotes
-                  .replace(/"/g, '"')
-                  .replace(/"/g, '"');
+              // Fallback: Try to extract and reconstruct JSON more carefully
+              const titleMatch = text.match(/"title"\s*:\s*"([^"]+)"/i);
+              const tldrMatch = text.match(/"tldr"\s*:\s*"([^"]*(?:\\.[^"]*)*)"/i);
+              const bodyMatch = text.match(/"body"\s*:\s*"([\s\S]*?)"/i);
+              
+              if (titleMatch && tldrMatch && bodyMatch) {
+                // Reconstruct JSON from extracted parts
+                const reconstructedJson = {
+                  title: titleMatch[1],
+                  tldr: tldrMatch[1].replace(/\\/g, ''),
+                  body: bodyMatch[1].replace(/\\n/g, '\n').replace(/\\t/g, '\t').replace(/\\"/g, '"')
+                };
                 
                 try {
-                  articleData = JSON.parse(fallbackText);
-                  console.log(`[AI] Fallback parsing succeeded`);
+                  // Validate by converting back to JSON string and parsing
+                  articleData = JSON.parse(JSON.stringify(reconstructedJson));
+                  console.log(`[AI] Fallback parsing succeeded by reconstruction`);
                 } catch (fallbackError) {
                   console.log(`[AI] Raw response text (first 500 chars):`, text.substring(0, 500));
                   console.log(`[AI] Cleaned text (first 500 chars):`, cleanedText.substring(0, 500));
-                  throw new Error(`JSON parsing failed: ${parseError.message}. Fallback also failed: ${fallbackError.message}`);
+                  throw new Error(`JSON parsing failed: ${parseError.message}. Reconstruction also failed: ${fallbackError.message}`);
                 }
               } else {
                 console.log(`[AI] Raw response text (first 500 chars):`, text.substring(0, 500));
-                throw new Error(`JSON parsing failed and no fallback match found: ${parseError.message}`);
+                throw new Error(`JSON parsing failed and no extractable content found: ${parseError.message}`);
               }
             }
             
@@ -339,22 +336,95 @@ app.post('/api/admin/dashboard', async (req, res) => {
 // Admin: Create access key (for testing)
 app.post('/api/admin/create-key', async (req, res) => {
   try {
-    const { plan = 'basic', email } = req.body;
+    const { plan = 'basic', email, credits } = req.body;
     
-    const credits = keyGenerator.getCreditsForPlan(plan);
+    // Use custom credits if provided, otherwise use default for plan
+    const keyCredits = credits || keyGenerator.getCreditsForPlan(plan);
     const accessKey = await keyGenerator.generateUniqueKey(database);
     
-    await database.createAccessKey(accessKey, plan, credits, email);
+    await database.createAccessKey(accessKey, plan, keyCredits, email);
     
     res.json({
       success: true,
       accessKey,
       plan,
-      credits,
+      credits: keyCredits,
       message: 'Access key created successfully'
     });
   } catch (error) {
     console.error('Create key error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Admin: Clear analytics data (preserves database structure)
+app.post('/api/admin/clear-analytics', async (req, res) => {
+  try {
+    const { password } = req.body;
+    
+    // Verify admin password
+    const ADMIN_PASSWORD = 'KeywordAlchemist2025@SuperAdmin#Dashboard$Analytics!';
+    
+    if (password !== ADMIN_PASSWORD) {
+      return res.status(401).json({ error: 'Invalid admin credentials' });
+    }
+    
+    await database.clearAnalyticsData();
+    
+    res.json({
+      success: true,
+      message: 'Analytics data cleared successfully - database structure preserved'
+    });
+  } catch (error) {
+    console.error('Clear analytics error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Admin: Delete all access keys
+app.post('/api/admin/delete-all-keys', async (req, res) => {
+  try {
+    const { password } = req.body;
+    
+    // Verify admin password
+    const ADMIN_PASSWORD = 'KeywordAlchemist2025@SuperAdmin#Dashboard$Analytics!';
+    
+    if (password !== ADMIN_PASSWORD) {
+      return res.status(401).json({ error: 'Invalid admin credentials' });
+    }
+    
+    await database.deleteAllKeys();
+    
+    res.json({
+      success: true,
+      message: 'All access keys deleted successfully'
+    });
+  } catch (error) {
+    console.error('Delete keys error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Admin: Get all access keys
+app.post('/api/admin/get-keys', async (req, res) => {
+  try {
+    const { password } = req.body;
+    
+    // Verify admin password
+    const ADMIN_PASSWORD = 'KeywordAlchemist2025@SuperAdmin#Dashboard$Analytics!';
+    
+    if (password !== ADMIN_PASSWORD) {
+      return res.status(401).json({ error: 'Invalid admin credentials' });
+    }
+    
+    const keys = await database.getAllKeys();
+    
+    res.json({
+      success: true,
+      keys
+    });
+  } catch (error) {
+    console.error('Get keys error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

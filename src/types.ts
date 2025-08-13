@@ -1,7 +1,7 @@
 export interface Keyword {
   id: string;
   text: string;
-  status: 'pending' | 'processing' | 'completed' | 'error';
+  status: 'pending' | 'processing' | 'completed' | 'error' | 'skipped';
   article?: Article;  // Keeping for backwards compatibility
   articles?: Article[];  // New field for multiple articles
   error?: string;

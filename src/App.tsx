@@ -5,7 +5,6 @@ import './App.css';
 import { Keyword, Article, Theme, CurrentView, CreditInfo } from './types';
 import { parseKeywordsFromFile, generateUniqueId, copyToClipboard, formatContent, readFileAsText, validateFileType } from './utils/fileUtils';
 import { markdownToHtml, getWordCount } from './utils/markdownUtils';
-import geminiService from './services/geminiService';
 import AdminDashboard from './components/AdminDashboard';
 
 // ArticleTabView Component for displaying multiple approaches in tabs
@@ -276,8 +275,6 @@ function App() {
   const [keywords, setKeywords] = useState<Keyword[]>([]);
   const [articles, setArticles] = useState<Article[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [apiKey, setApiKey] = useState('');
-  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [copiedArticleId, setCopiedArticleId] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -299,19 +296,7 @@ function App() {
       setTheme(savedTheme);
     }
     
-    // Check environment variable first, then localStorage
-    const envApiKey = process.env.REACT_APP_GEMINI_API_KEY;
-    const savedApiKey = localStorage.getItem('geminiApiKey');
-    
-    if (envApiKey) {
-      setApiKey(envApiKey);
-      geminiService.setApiKey(envApiKey);
-    } else if (savedApiKey) {
-      setApiKey(savedApiKey);
-      geminiService.setApiKey(savedApiKey);
-    } else {
-      setShowApiKeyInput(true);
-    }
+    // API key configuration removed - now using backend-only approach
   }, []);
 
   // Apply theme to document
@@ -324,14 +309,6 @@ function App() {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
 
-  const handleApiKeySubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (apiKey.trim()) {
-      localStorage.setItem('geminiApiKey', apiKey.trim());
-      geminiService.setApiKey(apiKey.trim());
-      setShowApiKeyInput(false);
-    }
-  };
 
   const handleFileUpload = async (file: File) => {
     if (!validateFileType(file)) {
@@ -445,16 +422,25 @@ function App() {
     }
 
     // Check if we have enough credits for all pending keywords
+    let keywordsToProcess = pendingKeywords;
+    let warningMessage = '';
+    
     if (pendingKeywords.length > creditInfo.creditsRemaining) {
-      alert(`You have ${creditInfo.creditsRemaining} credits remaining, but you're trying to process ${pendingKeywords.length} keywords. Please reduce your keyword list or purchase more credits.`);
-      return;
+      keywordsToProcess = pendingKeywords.slice(0, creditInfo.creditsRemaining);
+      const skippedCount = pendingKeywords.length - creditInfo.creditsRemaining;
+      
+      warningMessage = `⚠️ Processing ${keywordsToProcess.length} keywords (your available credits). ${skippedCount} keyword${skippedCount > 1 ? 's' : ''} will be skipped due to insufficient credits.`;
+      
+      if (!window.confirm(`${warningMessage}\n\nDo you want to proceed with processing ${keywordsToProcess.length} keywords?`)) {
+        return;
+      }
     }
 
     setIsGenerating(true);
     
     try {
-      // Use the backend API to process all keywords at once
-      const response = await apiService.processKeywords(accessKey, pendingKeywords.map(k => k.text));
+      // Use the backend API to process available keywords
+      const response = await apiService.processKeywords(accessKey, keywordsToProcess.map(k => k.text));
       
       // Process the response and update the UI
       const { articles: generatedArticles, creditsRemaining } = response;
@@ -483,11 +469,14 @@ function App() {
         processedArticles.push(article);
       }
       
-      // Update keyword statuses to completed
+      // Update keyword statuses - completed for processed, skipped for others
       setKeywords(prev => prev.map(k => {
-        if (pendingKeywords.find(pk => pk.id === k.id)) {
+        if (keywordsToProcess.find(pk => pk.id === k.id)) {
           const keywordArticles = processedArticles.filter(a => a.keyword === k.text);
           return { ...k, status: 'completed', articles: keywordArticles };
+        } else if (pendingKeywords.find(pk => pk.id === k.id)) {
+          // This was pending but not processed due to credit limits
+          return { ...k, status: 'skipped', error: 'Insufficient credits' };
         }
         return k;
       }));
@@ -498,14 +487,17 @@ function App() {
     } catch (error: any) {
       console.error('Error generating blog posts:', error);
       
-      // Update all pending keywords to error status
+      // Update keywords to error status - only those we tried to process
       setKeywords(prev => prev.map(k => {
-        if (pendingKeywords.find(pk => pk.id === k.id)) {
+        if (keywordsToProcess && keywordsToProcess.find(pk => pk.id === k.id)) {
           return { 
             ...k, 
             status: 'error', 
             error: error.response?.data?.error || error.message || 'Unknown error'
           };
+        } else if (pendingKeywords.find(pk => pk.id === k.id)) {
+          // This was pending but not processed due to credit limits
+          return { ...k, status: 'skipped', error: 'Insufficient credits' };
         }
         return k;
       }));
@@ -528,29 +520,9 @@ function App() {
         // Show loading state for conversion
         setConvertingArticleId(articleId);
         
-        // Dynamic format conversion - regenerate content in new format
-        try {
-          const convertedPost = await geminiService.convertFormat(
-            article.title,
-            article.tldr, 
-            article.body,
-            article.originalFormat,
-            outputFormat
-          );
-          
-          if (!convertedPost.title || !convertedPost.body) {
-            throw new Error('Invalid conversion response');
-          }
-          
-          content = formatContent(convertedPost.title, convertedPost.body, outputFormat);
-          console.log('Format conversion successful');
-        } catch (conversionError) {
-          console.warn('Format conversion failed, using original content:', conversionError);
-          content = formatContent(article.title, article.body, outputFormat);
-        } finally {
-          // Clear loading state
-          setConvertingArticleId(null);
-        }
+        // Use original content - format conversion moved to backend
+        content = formatContent(article.title, article.body, outputFormat);
+        setConvertingArticleId(null);
       } else {
         // Use original content
         content = formatContent(article.title, article.body, outputFormat);
@@ -595,56 +567,110 @@ function App() {
     setArticles([]);
   };
 
-  if (showApiKeyInput) {
+  const removeKeyword = (keywordId: string) => {
+    setKeywords(prev => prev.filter(k => k.id !== keywordId));
+    // Also remove associated articles
+    setArticles(prev => {
+      const keywordToRemove = keywords.find(k => k.id === keywordId);
+      if (keywordToRemove) {
+        return prev.filter(a => a.keyword !== keywordToRemove.text);
+      }
+      return prev;
+    });
+  };
+
+  // Status circle component
+  const StatusCircle = ({ status }: { status: string }) => {
+    const getStatusStyle = () => {
+      switch (status) {
+        case 'pending':
+          return {
+            width: '16px',
+            height: '16px',
+            borderRadius: '50%',
+            border: '2px solid var(--text-muted)',
+            background: 'transparent',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          };
+        case 'processing':
+          return {
+            width: '16px',
+            height: '16px',
+            borderRadius: '50%',
+            background: '#f59e0b', // yellow-ish
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            animation: 'pulse 2s infinite'
+          };
+        case 'completed':
+          return {
+            width: '16px',
+            height: '16px',
+            borderRadius: '50%',
+            background: '#10b981', // green
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white'
+          };
+        case 'error':
+          return {
+            width: '16px',
+            height: '16px',
+            borderRadius: '50%',
+            background: '#ef4444', // red
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white'
+          };
+        case 'skipped':
+          return {
+            width: '16px',
+            height: '16px',
+            borderRadius: '50%',
+            background: '#f97316', // orange
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white'
+          };
+        default:
+          return {
+            width: '16px',
+            height: '16px',
+            borderRadius: '50%',
+            border: '2px solid var(--text-muted)',
+            background: 'transparent'
+          };
+      }
+    };
+
+    const getIcon = () => {
+      switch (status) {
+        case 'processing':
+          return <div className="loading-spinner" style={{ width: '10px', height: '10px' }} />;
+        case 'completed':
+          return <span style={{ fontSize: '10px', fontWeight: 'bold' }}>✓</span>;
+        case 'error':
+          return <span style={{ fontSize: '8px', fontWeight: 'bold' }}>✕</span>;
+        case 'skipped':
+          return <span style={{ fontSize: '8px', fontWeight: 'bold' }}>⚠</span>;
+        default:
+          return null;
+      }
+    };
+
     return (
-      <div className="app">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', padding: '20px' }}>
-          <div style={{ maxWidth: '400px', width: '100%' }}>
-            <h2 style={{ textAlign: 'center', marginBottom: '20px', color: 'var(--text-primary)' }}>Configure Gemini API</h2>
-            <p style={{ textAlign: 'center', marginBottom: '30px', color: 'var(--text-secondary)' }}>Please enter your Google Gemini API key to get started.</p>
-            <form onSubmit={handleApiKeySubmit}>
-              <input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="Enter your Gemini API key..."
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  marginBottom: '20px',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: '8px',
-                  background: 'var(--bg-primary)',
-                  color: 'var(--text-primary)',
-                  fontSize: '16px'
-                }}
-                required
-              />
-              <button
-                type="submit"
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  background: 'var(--accent-primary)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  cursor: 'pointer'
-                }}
-              >
-                Save API Key
-              </button>
-            </form>
-            <p style={{ fontSize: '14px', color: 'var(--text-muted)', textAlign: 'center', marginTop: '20px' }}>
-              Get your API key from <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)' }}>Google AI Studio</a>
-            </p>
-          </div>
-        </div>
+      <div style={getStatusStyle()} title={status.charAt(0).toUpperCase() + status.slice(1)}>
+        {getIcon()}
       </div>
     );
-  }
+  };
+
 
   return (
     <div className="app">
@@ -859,12 +885,58 @@ function App() {
           </div>
           <div className="keyword-list">
             {keywords.map(keyword => (
-              <div key={keyword.id} className={`keyword-item ${keyword.status}`}>
-                <span className="keyword-text">{keyword.text}</span>
-                <span className={`keyword-status ${keyword.status}`}>
-                  {keyword.status === 'processing' && <div className="loading-spinner" />}
-                  {keyword.status}
-                </span>
+              <div key={keyword.id} className={`keyword-item ${keyword.status}`} style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '12px',
+                marginBottom: '8px',
+                background: 'var(--bg-secondary)',
+                borderRadius: '8px',
+                border: '1px solid var(--border-color)'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
+                  <StatusCircle status={keyword.status} />
+                  <span className="keyword-text" style={{ 
+                    fontSize: '14px', 
+                    color: 'var(--text-primary)',
+                    flex: 1
+                  }}>
+                    {keyword.text}
+                  </span>
+                </div>
+                <button
+                  onClick={() => removeKeyword(keyword.id)}
+                  disabled={keyword.status === 'processing'}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--error-color)',
+                    cursor: keyword.status === 'processing' ? 'not-allowed' : 'pointer',
+                    padding: '4px',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    opacity: keyword.status === 'processing' ? 0.5 : 1,
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (keyword.status !== 'processing') {
+                      e.currentTarget.style.background = 'var(--error-color)';
+                      e.currentTarget.style.color = 'white';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (keyword.status !== 'processing') {
+                      e.currentTarget.style.background = 'none';
+                      e.currentTarget.style.color = 'var(--error-color)';
+                    }
+                  }}
+                  title="Remove keyword"
+                >
+                  <X size={16} />
+                </button>
               </div>
             ))}
           </div>

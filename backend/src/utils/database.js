@@ -206,6 +206,58 @@ class DatabaseManager {
     }
   }
 
+  // Clear all analytics data (preserves structure)
+  clearAnalyticsData() {
+    try {
+      // Clear usage logs
+      this.db.exec('DELETE FROM usage_logs');
+      // Clear keyword analytics
+      this.db.exec('DELETE FROM keyword_analytics');
+      // Reset any auto-increment counters (only if sqlite_sequence table exists)
+      try {
+        this.db.exec("DELETE FROM sqlite_sequence WHERE name IN ('usage_logs', 'keyword_analytics')");
+      } catch (seqError) {
+        // sqlite_sequence might not exist if no auto-increment was used yet
+        console.log('Note: sqlite_sequence table not found or empty, skipping counter reset');
+      }
+      
+      console.log('Analytics data cleared successfully');
+      return Promise.resolve({ cleared: true });
+    } catch (error) {
+      console.error('Error clearing analytics data:', error);
+      return Promise.reject(error);
+    }
+  }
+
+  // Delete all access keys
+  deleteAllKeys() {
+    try {
+      this.db.exec('DELETE FROM access_keys');
+      console.log('All access keys deleted successfully');
+      return Promise.resolve({ deleted: true });
+    } catch (error) {
+      console.error('Error deleting access keys:', error);
+      return Promise.reject(error);
+    }
+  }
+
+  // Get all access keys (admin function)
+  getAllKeys() {
+    try {
+      const stmt = this.db.prepare(`
+        SELECT key, plan, credits_total, credits_used, email, status, created_at,
+               (credits_total - credits_used) as credits_remaining
+        FROM access_keys 
+        ORDER BY created_at DESC
+      `);
+      
+      const keys = stmt.all();
+      return Promise.resolve(keys);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
   // Get admin dashboard analytics
   getAdminAnalytics() {
     try {
