@@ -1,16 +1,33 @@
 version: '3.8'
 
 services:
-  keyword-alchemist:
+  # Frontend service
+  frontend:
     build: .
-    container_name: keyword-alchemist
-    restart: unless-stopped
+    container_name: keyword-alchemist-frontend
     ports:
       - "3001:80"
+    restart: unless-stopped
+    networks:
+      - keyword-alchemist-network
+    depends_on:
+      - backend
+
+  # Backend API service
+  backend:
+    build: ./backend
+    container_name: keyword-alchemist-backend
+    ports:
+      - "3002:3002"
+    restart: unless-stopped
     networks:
       - keyword-alchemist-network
     environment:
       - NODE_ENV=production
+      - PORT=3002
+      - GEMINI_API_KEY=AIzaSyDY2uU3oWKPiT40d7g4CAQBlqbWmKueJGc
+    volumes:
+      - ./backend/credit_system.db:/app/credit_system.db
 
 networks:
   keyword-alchemist-network:
