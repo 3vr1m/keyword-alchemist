@@ -16,6 +16,7 @@ app.use(helmet());
 app.use(cors({
   origin: [
     process.env.FRONTEND_URL || 'http://localhost:3000',
+    'https://keywordalchemist.com',
     'http://23.88.106.121:3001',
     'http://localhost:3001'
   ],
@@ -475,8 +476,8 @@ app.post('/api/stripe/create-checkout', async (req, res) => {
     const session = await stripeService.createCheckoutSession(
       plan,
       email,
-      successUrl || `${process.env.FRONTEND_URL || 'http://localhost:3000'}?payment=success`,
-      cancelUrl || `${process.env.FRONTEND_URL || 'http://localhost:3000'}?payment=cancelled`
+      successUrl || `https://keywordalchemist.com?payment=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl || `https://keywordalchemist.com?payment=cancelled`
     );
     
     res.json({

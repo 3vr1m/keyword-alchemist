@@ -6,19 +6,19 @@ class StripeService {
     this.plans = {
       basic: {
         price: 599, // $5.99 in cents
-        credits: 10,
+        credits: 50,
         name: 'Basic Plan',
         description: 'Perfect for getting started and testing the waters'
       },
       blogger: {
         price: 5000, // $50.00 in cents
-        credits: 50,
+        credits: 500,
         name: 'Blogger Plan', 
         description: 'Ideal for serious bloggers building an authority site'
       },
       pro: {
         price: 10000, // $100.00 in cents
-        credits: 240,
+        credits: 1200,
         name: 'Pro / Agency Plan',
         description: 'For professionals managing multiple sites or high-volume content'
       }

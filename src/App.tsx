@@ -1145,6 +1145,7 @@ function App() {
                   well-researched blog post. Your plan determines how many of these powerful 
                   transformations you can perform.
                 </p>
+              </div>
               
               <div className="pricing-cards">
                 <div className="pricing-card">
@@ -1370,14 +1371,14 @@ function App() {
               </button>
               <button
                 onClick={handleEmailSubmit}
-                disabled={!purchaseEmail.trim() || processingPayment}
+                disabled={!purchaseEmail.trim() || !!processingPayment}
                 style={{
                   padding: '12px 32px',
                   border: 'none',
                   borderRadius: '8px',
-                  background: !purchaseEmail.trim() || processingPayment ? 'var(--bg-secondary)' : 'var(--accent-primary)',
-                  color: !purchaseEmail.trim() || processingPayment ? 'var(--text-muted)' : 'white',
-                  cursor: !purchaseEmail.trim() || processingPayment ? 'not-allowed' : 'pointer',
+                  background: !purchaseEmail.trim() || !!processingPayment ? 'var(--bg-secondary)' : 'var(--accent-primary)',
+                  color: !purchaseEmail.trim() || !!processingPayment ? 'var(--text-muted)' : 'white',
+                  cursor: !purchaseEmail.trim() || !!processingPayment ? 'not-allowed' : 'pointer',
                   fontSize: '16px',
                   fontWeight: '700',
                   transition: 'all 0.2s ease',

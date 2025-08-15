@@ -38,9 +38,9 @@ class KeyGenerator {
   // Credit amounts by plan
   getCreditsForPlan(plan) {
     const credits = {
-      basic: 10,
-      blogger: 50,
-      pro: 240
+      basic: 50,
+      blogger: 500,
+      pro: 1200
     };
     
     return credits[plan] || 0;
